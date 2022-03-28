@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>pytorch.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="basic-conceptions">Basic conceptions</h1>
+<h2 id="underlying-data">underlying data</h2>
+<p>Appears in:</p>
+<ul>
+<li>Torch.storage</li>
+<li>Tensor.view()</li>
+</ul>
+<p>Basic idea is every tensor is a specific view of the origin contiguous, one-dimensional array of a single data type.</p>
+<blockquote>
+<p>A <code>torch.Storage</code> is a contiguous, one-dimensional array of a single data type.</p>
+</blockquote>
+<p>So one Torch.storage can have different view of Tensor, with different dimensions.</p>
+<h2 id="embedding">Embedding</h2>
+<p>Embedding technique exist for replacing the low efficient one-hot embedding method for large system.</p>
+<p>An embedding example</p>
+<p>For a sentence:</p>
+<blockquote>
+<p>Deep learning is very deep</p>
+</blockquote>
+<p>We can align an unique index for each word, turning sentence into:</p>
+<blockquote>
+<p>1、2、3、4、1</p>
+</blockquote>
+<p>Then we give how many latent parameters are used to determine a vector used to represent each index, giving an embedding matrix:</p>
+<p><img src="./image/embedding_matrix.png" alt="center"></p>
+<p>Then a large one-hot encode vector is replaced by a embedding matrix, increasing efficiency dramatically</p>
+<h1 id="nn-package">nn package</h1>
+<h2 id="nnmodule">nn.Module</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module">doc</a></p>
+<p><code>torch.nn.Module</code></p>
+<p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in a tree structure. You can assign the submodules as regular attributes:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn
+<span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Model</span><span class="hljs-params">(nn.Module)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        super().__init__()
+        self.conv1 = nn.Conv2d(<span class="hljs-number">1</span>, <span class="hljs-number">20</span>, <span class="hljs-number">5</span>)
+        self.conv2 = nn.Conv2d(<span class="hljs-number">20</span>, <span class="hljs-number">20</span>, <span class="hljs-number">5</span>)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(self, x)</span>:</span>
+        x = F.relu(self.conv1(x))
+        <span class="hljs-keyword">return</span> F.relu(self.conv2(x))
+</div></code></pre>
+<h2 id="nnmodulelist">nn.ModuleList</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.nn.ModuleList.html#torch.nn.ModuleList">doc</a></p>
+<p><code>torch.nn.ModuleList(modules=None)</code></p>
+<p>Holds submodules in a list.</p>
+<p><code>ModuleList</code> can be indexed like a regular Python list, but modules it contains are properly registered, and will be visible by all <code>Module</code> methods.</p>
+<p>Parameters</p>
+<ul>
+<li><code>modules</code> (iterable, optional) – an iterable of modules to add</li>
+</ul>
+<p>Examples</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyModule</span><span class="hljs-params">(nn.Module)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        super(MyModule, self).__init__()
+        self.linears = nn.ModuleList([nn.Linear(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>)])
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(self, x)</span>:</span>
+        <span class="hljs-comment"># ModuleList can act as an iterable, or be indexed using ints</span>
+        <span class="hljs-keyword">for</span> i, l <span class="hljs-keyword">in</span> enumerate(self.linears):
+            x = self.linears[i // <span class="hljs-number">2</span>](x) + l(x)
+        <span class="hljs-keyword">return</span> x
+</div></code></pre>
+<h2 id="nnlinear">nn.Linear</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear">doc</a></p>
+<p><code>torch.nn.Linear(in_features, out_features, bias=True, device=None, dtype=None)</code></p>
+<p>Applies a linear transformation to the incoming data:</p>
+<p>$$
+y = xA^T + b
+$$</p>
+<p>Parameters</p>
+<ul>
+<li>
+<p><code>in_features</code> – size of each input sample</p>
+</li>
+<li>
+<p><code>out_features</code> – size of each output sample</p>
+</li>
+<li>
+<p><code>bias</code> – If set to False, the layer will not learn an additive bias. Default: <code>True</code></p>
+</li>
+</ul>
+<p>Shape:</p>
+<ul>
+<li>Input: $(*, H_{in})$</li>
+<li>Output: $(*, H_{out})$</li>
+</ul>
+<h2 id="nnlayernorm">nn.LayerNorm</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html#torch.nn.LayerNorm">doc</a></p>
+<p><code>torch.nn.LayerNorm(normalized_shape, eps=1e-05, elementwise_affine=True, device=None, dtype=None)</code></p>
+<p>Applies Layer Normalization over a mini-batch of inputs:</p>
+<p>$$
+<input type="checkbox" id="checkbox0" checked="true"><label for="checkbox0">+ \varepsilon} * \gamma + \beta</label>
+$$</p>
+<ul>
+<li>The mean and standard-deviation are calculated over the last D dimensions, where D is the dimension of <code>normalized_shape</code></li>
+<li>$\gamma$ and $\beta$ are learnable affine transform parameters of <code>normalized_shape</code> if <code>elementwise_affine</code> is True.</li>
+</ul>
+<p>Parameters:</p>
+<ul>
+<li><code>normalized_shape</code> (int or list or torch.Size)
+input shape from an expected input of size
+$$
+[* \times \mathrm{normalized_shape}[0] \times \mathrm{normalized_shape}[1] \times \cdots \times \mathrm{normalized_shape}[-1]]
+$$
+If a single integer is used, it is treated as a singleton list, and this module will normalize over the last dimension which is expected to be of that specific size.</li>
+<li><code>eps</code> – a value added to the denominator for numerical stability. Default: 1e-5</li>
+<li><code>elementwise_affine</code> – a boolean value that when set to <code>True</code>, this module has learnable per-element affine parameters initialized to ones (for weights) and zeros (for biases). Default: True.</li>
+</ul>
+<h2 id="nndropout">nn.Dropout</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html#torch.nn.Dropout">doc</a></p>
+<p><code>torch.nn.Dropout(p=0.5, inplace=False)</code></p>
+<p>During training, randomly zeroes some of the elements of the input tensor with probability <code>p</code> using samples from a Bernoulli distribution. Each channel will be zeroed out independently on every forward call.</p>
+<blockquote>
+<p>This has proven to be an effective technique for regularization and preventing the co-adaptation of neurons as described in the paper Improving neural networks by preventing co-adaptation of feature detectors .</p>
+</blockquote>
+<p>Furthermore, the outputs are scaled by a factor of
+$$
+\frac{1}{1-p}
+$$
+during training. This means that during evaluation the module simply computes an identity function.</p>
+<p>Parameters</p>
+<ul>
+<li><code>p</code> – probability of an element to be zeroed. Default: <code>0.5</code></li>
+<li><code>inplace</code> – If set to True, will do this operation in-place. Default: <code>False</code></li>
+</ul>
+<h2 id="nnembedding">nn.Embedding</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.nn.Embedding.html#torch.nn.Embedding">doc</a></p>
+<p><code>torch.nn.Embedding(num_embeddings, embedding_dim, padding_idx=None, max_norm=None, norm_type=2.0, scale_grad_by_freq=False, sparse=False, _weight=None, device=None, dtype=None)</code></p>
+<p>A simple lookup table that stores embeddings of a fixed dictionary and size.</p>
+<p>This module is often used to store word embeddings and retrieve them using indices. The input to the module is a list of indices, and the output is the corresponding word embeddings.</p>
+<p>Parameters</p>
+<ul>
+<li><code>num_embeddings</code> (int) – size of the dictionary of embeddings</li>
+<li><code>embedding_dim</code> (int) – the size of each embedding vector</li>
+<li><code>padding_idx</code> (int, optional) – If specified, the entries at <code>padding_idx</code> do not contribute to the gradient; therefore, the embedding vector at <code>padding_idx</code> is not updated during training, i.e. it remains as a fixed “pad”. For a newly constructed Embedding, the embedding vector at <code>padding_idx</code> will default to all zeros, but can be updated to another value to be used as the padding vector.</li>
+<li><code>max_norm</code> (float, optional) – If given, each embedding vector with norm larger than max_norm is renormalized to have norm max_norm.</li>
+<li><code>norm_type</code> (float, optional) – The p of the p-norm to compute for the max_norm option. Default <code>2</code>.</li>
+<li><code>scale_grad_by_freq</code> (boolean, optional) – If given, this will scale gradients by the inverse of frequency of the words in the mini-batch. Default <code>False</code>.</li>
+<li><code>sparse</code> (bool, optional) – If <code>True</code>, gradient w.r.t. <code>weight</code> matrix will be a sparse tensor. See Notes for more details regarding sparse gradients.</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># an Embedding module containing 10 tensors of size 3</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding = nn.Embedding(<span class="hljs-number">10</span>, <span class="hljs-number">3</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># a batch of 2 samples of 4 indices each</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>input = torch.LongTensor([[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>],[<span class="hljs-number">4</span>,<span class="hljs-number">3</span>,<span class="hljs-number">2</span>,<span class="hljs-number">9</span>]])
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding(input)
+tensor([[[<span class="hljs-number">-0.0251</span>, <span class="hljs-number">-1.6902</span>,  <span class="hljs-number">0.7172</span>],
+         [<span class="hljs-number">-0.6431</span>,  <span class="hljs-number">0.0748</span>,  <span class="hljs-number">0.6969</span>],
+         [ <span class="hljs-number">1.4970</span>,  <span class="hljs-number">1.3448</span>, <span class="hljs-number">-0.9685</span>],
+         [<span class="hljs-number">-0.3677</span>, <span class="hljs-number">-2.7265</span>, <span class="hljs-number">-0.1685</span>]],
+
+        [[ <span class="hljs-number">1.4970</span>,  <span class="hljs-number">1.3448</span>, <span class="hljs-number">-0.9685</span>],
+         [ <span class="hljs-number">0.4362</span>, <span class="hljs-number">-0.4004</span>,  <span class="hljs-number">0.9400</span>],
+         [<span class="hljs-number">-0.6431</span>,  <span class="hljs-number">0.0748</span>,  <span class="hljs-number">0.6969</span>],
+         [ <span class="hljs-number">0.9124</span>, <span class="hljs-number">-2.3616</span>,  <span class="hljs-number">1.1151</span>]]])
+
+
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># example with padding_idx</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding = nn.Embedding(<span class="hljs-number">10</span>, <span class="hljs-number">3</span>, padding_idx=<span class="hljs-number">0</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>input = torch.LongTensor([[<span class="hljs-number">0</span>,<span class="hljs-number">2</span>,<span class="hljs-number">0</span>,<span class="hljs-number">5</span>]])
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding(input)
+tensor([[[ <span class="hljs-number">0.0000</span>,  <span class="hljs-number">0.0000</span>,  <span class="hljs-number">0.0000</span>],
+         [ <span class="hljs-number">0.1535</span>, <span class="hljs-number">-2.0309</span>,  <span class="hljs-number">0.9315</span>],
+         [ <span class="hljs-number">0.0000</span>,  <span class="hljs-number">0.0000</span>,  <span class="hljs-number">0.0000</span>],
+         [<span class="hljs-number">-0.1655</span>,  <span class="hljs-number">0.9897</span>,  <span class="hljs-number">0.0635</span>]]])
+
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># example of changing `pad` vector</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>padding_idx = <span class="hljs-number">0</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding = nn.Embedding(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>, padding_idx=padding_idx)
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding.weight
+Parameter containing:
+tensor([[ <span class="hljs-number">0.0000</span>,  <span class="hljs-number">0.0000</span>,  <span class="hljs-number">0.0000</span>],
+        [<span class="hljs-number">-0.7895</span>, <span class="hljs-number">-0.7089</span>, <span class="hljs-number">-0.0364</span>],
+        [ <span class="hljs-number">0.6778</span>,  <span class="hljs-number">0.5803</span>,  <span class="hljs-number">0.2678</span>]], requires_grad=<span class="hljs-literal">True</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">with</span> torch.no_grad():
+<span class="hljs-meta">... </span>    embedding.weight[padding_idx] = torch.ones(<span class="hljs-number">3</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding.weight
+Parameter containing:
+tensor([[ <span class="hljs-number">1.0000</span>,  <span class="hljs-number">1.0000</span>,  <span class="hljs-number">1.0000</span>],
+        [<span class="hljs-number">-0.7895</span>, <span class="hljs-number">-0.7089</span>, <span class="hljs-number">-0.0364</span>],
+        [ <span class="hljs-number">0.6778</span>,  <span class="hljs-number">0.5803</span>,  <span class="hljs-number">0.2678</span>]], requires_grad=<span class="hljs-literal">True</span>)
+</div></code></pre>
+<h1 id="tensors-methods">Tensor's methods</h1>
+<h2 id="tensormaskedfill">Tensor.masked_fill_</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.Tensor.masked_fill_.html#torch.Tensor.masked_fill_">doc</a></p>
+<p><code>Tensor.masked_fill_(mask, value)</code></p>
+<p>Fills elements of self tensor with value where mask is True. The shape of mask must be broadcastable with the shape of the underlying tensor.</p>
+<p>Parameters</p>
+<ul>
+<li><code>mask</code> (BoolTensor) – the boolean mask</li>
+<li><code>value</code> (float) – the value to fill in with</li>
+</ul>
+<h2 id="tensorview">Tensor.view</h2>
+<p><a href="https://pytorch.org/docs/stable/tensor_view.html">doc</a></p>
+<p>PyTorch allows a tensor to be a View of an existing tensor. View tensor shares the same underlying data with its base tensor. Supporting View avoids explicit data copy, thus allows us to do fast and memory efficient reshaping, slicing and element-wise operations.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">&gt;&gt;&gt; </span>t = torch.rand(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>b = t.view(<span class="hljs-number">2</span>, <span class="hljs-number">8</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>t.storage().data_ptr() == b.storage().data_ptr()  <span class="hljs-comment"># `t` and `b` share the same underlying data.</span>
+<span class="hljs-literal">True</span>
+<span class="hljs-comment"># Modifying view tensor changes base tensor as well.</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>b[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = <span class="hljs-number">3.14</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>t[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]
+tensor(<span class="hljs-number">3.14</span>)
+</div></code></pre>
+<p>Typically a PyTorch op returns a new tensor as output, e.g. <code>add()</code>. But in case of view ops, outputs are views of input tensors to avoid unnecessary data copy.</p>
+<p><strong>No data movement occurs when creating a view, view tensor just changes the way it interprets the same data.</strong></p>
+<h2 id="tensorunsqueeze">Tensor.unsqueeze</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.unsqueeze.html#torch.unsqueeze">doc</a></p>
+<p><code>torch.unsqueeze(input, dim) → Tensor</code></p>
+<p>Returns a new tensor with a dimension of size one inserted at the specified position.</p>
+<p>Parameters</p>
+<ul>
+<li><code>input</code> (Tensor) – the input tensor.</li>
+<li><code>dim</code> (int) – the index at which to insert the singleton dimension</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">&gt;&gt;&gt; </span>x = torch.tensor([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span>torch.unsqueeze(x, <span class="hljs-number">0</span>)
+tensor([[ <span class="hljs-number">1</span>,  <span class="hljs-number">2</span>,  <span class="hljs-number">3</span>,  <span class="hljs-number">4</span>]])
+<span class="hljs-meta">&gt;&gt;&gt; </span>torch.unsqueeze(x, <span class="hljs-number">1</span>)
+tensor([[ <span class="hljs-number">1</span>],
+        [ <span class="hljs-number">2</span>],
+        [ <span class="hljs-number">3</span>],
+        [ <span class="hljs-number">4</span>]])
+</div></code></pre>
+<h2 id="tensortranspose">Tensor.transpose</h2>
+<p><a href="https://pytorch.org/docs/stable/generated/torch.transpose.html#torch.transpose">doc</a></p>
+<p><code>torch.transpose(input, dim0, dim1) → Tensor</code></p>
+<p>Returns a tensor that is a transposed version of <code>input</code>. The given dimensions <code>dim0</code> and <code>dim1</code> are swapped.</p>
+<p>Parameters</p>
+<ul>
+<li><code>input</code> (Tensor) – the input tensor.</li>
+<li><code>dim0</code> (int) – the first dimension to be transposed</li>
+<li><code>dim1</code> (int) – the second dimension to be transposed</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">&gt;&gt;&gt; </span>x = torch.randn(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>x
+tensor([[ <span class="hljs-number">1.0028</span>, <span class="hljs-number">-0.9893</span>,  <span class="hljs-number">0.5809</span>],
+        [<span class="hljs-number">-0.1669</span>,  <span class="hljs-number">0.7299</span>,  <span class="hljs-number">0.4942</span>]])
+<span class="hljs-meta">&gt;&gt;&gt; </span>torch.transpose(x, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>)
+tensor([[ <span class="hljs-number">1.0028</span>, <span class="hljs-number">-0.1669</span>],
+        [<span class="hljs-number">-0.9893</span>,  <span class="hljs-number">0.7299</span>],
+        [ <span class="hljs-number">0.5809</span>,  <span class="hljs-number">0.4942</span>]])
+</div></code></pre>
+<h2 id="tensormt">Tensor.mT</h2>
+<p><a href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor.mT">doc</a></p>
+<p>Returns a view of this tensor with the last two dimensions transposed.</p>
+<p><code>x.mT</code> is equivalent to <code>x.transpose(-2, -1)</code>.</p>
+
+</body>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });</script>
+</html>
