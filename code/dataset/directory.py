@@ -11,15 +11,15 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 
 import os
 from typing import IO
-import mdpy as md
 
-class CharmmTopologyParser:
+class DirectoryCreator:
     def __init__(self, *file_path_list) -> None:
         self._file_path_list = file_path_list
         self._target_block = ['RESI', 'PRES']
         self._directory = []
         self._index_directory = []
         self._residue_list = []
+        self.parse()
 
     def parse(self):
         for file_path in self._file_path_list:
@@ -103,7 +103,7 @@ class CharmmTopologyParser:
             line = f.readline()
         return line, True
 
-    def save(self, file_path: str):
+    def create_directory(self, file_path: str):
         with open(file_path, 'w') as f:
             for i, j in zip(self._directory, self._index_directory):
                 print('%s %i' %(i, j), file=f)
@@ -115,15 +115,3 @@ class CharmmTopologyParser:
     @property
     def index_directory(self):
         return self._index_directory
-
-if __name__ == '__main__':
-    cur_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(os.path.join(cur_dir, './data/'))
-    out_dir = os.path.join(os.path.join(cur_dir, '../out/model/'))
-
-    parser = CharmmTopologyParser(
-        os.path.join(data_dir, 'top_all36_prot.rtf')
-    )
-    parser.parse()
-    parser.save(os.path.join(out_dir, 'directory.txt'))
-    print(len(parser.index_directory))
