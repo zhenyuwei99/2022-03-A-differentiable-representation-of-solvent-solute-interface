@@ -57,11 +57,12 @@ class CharmmTopologyParser:
         return f.readline()
 
     def _parse_PRES_block(self, f: IO, line:str):
-        if 'C-terminus' in line or 'N-terminus' in line:
+        res_name = line.split()[1]
+        if 'C-terminus' in line or 'N-terminus' in line or 'N-Terminal' in line:
             if not 'dipeptide' in line: # Remove dipeptide info
                 is_specified_patch = False
                 for residue in self._residue_list:
-                    if residue in line and not 'dipeptide' in line: # Reiddue specified patching
+                    if residue in res_name and not 'dipeptide' in line: # Reiddue specified patching
                         is_specified_patch = residue
                 if is_specified_patch != False:
                     while not 'BOND' in line:
@@ -81,6 +82,18 @@ class CharmmTopologyParser:
                             self._directory.append('-'.join([
                                 residue, atom
                             ]))
+        else: # No N, C terminus but residue specified
+            is_specified_patch = False
+            for residue in self._residue_list:
+                if residue in line and not 'dipeptide' in line: # Reiddue specified patching
+                    is_specified_patch = residue
+            if is_specified_patch != False:
+                while not 'BOND' in line:
+                    if line.startswith('ATOM'):
+                        self._directory.append('-'.join([
+                            is_specified_patch, line.split()[2]
+                        ]))
+                    line = f.readline()
         return f.readline()
 
     def _skip_block(self, f: IO, line: str, target_block: str):
