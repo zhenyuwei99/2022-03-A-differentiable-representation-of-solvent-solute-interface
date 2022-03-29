@@ -16,9 +16,10 @@ import mdpy as md
 class CharmmTopologyParser:
     def __init__(self, *file_path_list) -> None:
         self._file_path_list = file_path_list
-        self._target_block = ['RESI'] # ['RESI', 'PRES']
+        self._target_block = ['RESI', 'PRES']
         self._directory = []
         self._index_directory = []
+        self._residue_list = []
 
     def parse(self):
         for file_path in self._file_path_list:
@@ -26,39 +27,66 @@ class CharmmTopologyParser:
         self._generate_index_directory()
 
     def _generate_index_directory(self):
+        self._directory = list(set(self._directory))
+        self._directory.sort()
         self._index_directory = [i+1 for i, j in enumerate(self._directory)]
 
     def _parse_single_file(self, file_path: str):
         with open(file_path, 'r') as f:
-            line, is_end = self._skip_block(f, f.readline())
+            line, is_end = self._skip_block(f, f.readline(), 'RESI')
             while not is_end:
-                line = self._parse_block(f, line)
-                line, is_end = self._skip_block(f, line)
+                line = self._parse_RESI_block(f, line)
+                line, is_end = self._skip_block(f, line, 'RESI')
 
-    def _parse_block(self, f: IO, line:str):
-        res_type, res_name = line.split()[:2]
-        ter_particles = ['NH3', 'HC', 'CC', 'OC']
-        if res_name == 'ALAD':
-            return f.readline()
+        with open(file_path, 'r') as f:
+            line, is_end = self._skip_block(f, f.readline(), 'PRES')
+            while not is_end:
+                line = self._parse_PRES_block(f, line)
+                line, is_end = self._skip_block(f, line, 'PRES')
+
+    def _parse_RESI_block(self, f: IO, line:str):
+        res_name = line.split()[1]
+        if res_name != 'ALAD':
+            self._residue_list.append(res_name)
         while not 'BOND' in line:
-            if line.startswith('ATOM'):
+            if res_name != 'ALAD' and line.startswith('ATOM'):
                 self._directory.append('-'.join([
                     res_name, line.split()[2]
                 ]))
             line = f.readline()
-        # ter_particles = ['NH3', 'HC', 'CC', 'OC']
-        # if res_type == 'RESI':
-        #     for particle in ter_particles:
-        #         self._directory.append('-'.join([
-        #             res_name, particle
-        #         ]))
         return f.readline()
 
-    def _skip_block(self, f: IO, line: str):
+    def _parse_PRES_block(self, f: IO, line:str):
+        if 'C-terminus' in line or 'N-terminus' in line:
+            if not 'dipeptide' in line: # Remove dipeptide info
+                is_specified_patch = False
+                for residue in self._residue_list:
+                    if residue in line and not 'dipeptide' in line: # Reiddue specified patching
+                        is_specified_patch = residue
+                if is_specified_patch != False:
+                    while not 'BOND' in line:
+                        if line.startswith('ATOM'):
+                            self._directory.append('-'.join([
+                                is_specified_patch, line.split()[2]
+                            ]))
+                        line = f.readline()
+                else:
+                    atoms = []
+                    while not 'BOND' in line:
+                        if line.startswith('ATOM'):
+                            atoms.append(line.split()[2])
+                        line = f.readline()
+                    for residue in self._residue_list:
+                        for atom in atoms:
+                            self._directory.append('-'.join([
+                                residue, atom
+                            ]))
+        return f.readline()
+
+    def _skip_block(self, f: IO, line: str, target_block: str):
         while line != '':
-            for block in self._target_block:
-                if line.startswith(block):
-                    return line, False
+            if line.startswith(target_block):
+                return line, False
             line = f.readline()
         return line, True
 
