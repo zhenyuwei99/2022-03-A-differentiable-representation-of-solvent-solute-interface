@@ -1376,7 +1376,7 @@ IC OY   CY   CAY  HY1   0.0000  0.0000  180.0000  0.0000  0.0000
 IC OY   CY   CAY  HY2   0.0000  0.0000   60.0000  0.0000  0.0000
 IC OY   CY   CAY  HY3   0.0000  0.0000  -60.0000  0.0000  0.0000
 
-PRES ACP          0.00 ! acetylated N-terminus for proline
+PRES ACP          0.00 ! PRO acetylated N-terminus for proline
                        ! do NOT use to create dipeptide, see ACPD
 GROUP                  ! use in generate statement
 ATOM CAY  CT3    -0.27 !
@@ -1556,7 +1556,7 @@ IC C    NT   CAT  HT1   0.0000  0.0000   60.0000  0.0000  0.0000
 IC C    NT   CAT  HT2   0.0000  0.0000  180.0000  0.0000  0.0000
 IC C    NT   CAT  HT3   0.0000  0.0000  -60.0000  0.0000  0.0000
 
-PRES ASPP         0.00 ! patch for protonated aspartic acid, proton on od2
+PRES ASPP         0.00 ! ASP patch for protonated aspartic acid, proton on od2
                        ! via acetic acid, use in a patch statement and
                        ! follow with AUTOgenerate ANGLes DIHEdrals command
 GROUP
@@ -1571,7 +1571,7 @@ BOND OD2 HD2
 DONOR HD2 OD2
 IC HD2  OD2  CG   OD1   0.0000  0.0000  0.0000  0.0000  0.0000
 
-PRES GLUP         0.00 ! patch for protonated glutamic acid, proton on oe2
+PRES GLUP         0.00 ! GLU patch for protonated glutamic acid, proton on oe2
                        ! via acetic acid, use in a patch statement and
                        ! follow with AUTOgenerate ANGLes DIHEdrals command
 GROUP
@@ -1586,7 +1586,7 @@ BOND OE2 HE2
 DONOR HE2 OE2
 IC HE2  OE2  CD   OE1   0.0000  0.0000  0.0000  0.0000  0.0000
 
-PRES LSN          0.00 ! patch for neutral lysine based on methylamine
+PRES LSN          0.00 ! LSN patch for neutral lysine based on methylamine
                        ! use in a patch statement
                        ! follow with AUTOgenerate ANGLes DIHEdrals command
 !delete atom and reassign charges
@@ -1620,7 +1620,7 @@ IC 1CA  1C   2N   2CA   0.0000  0.0000  180.0000  0.0000  0.0000
 IC 1C   2N   2CA  2C    0.0000  0.0000  180.0000  0.0000  0.0000
 IC 1C   2CA  *2N  2HN   0.0000  0.0000  180.0000  0.0000  0.0000
 
-PRES DISU        -0.36 ! patch for disulfides. Patch must be 1-CYS and 2-CYS.
+PRES DISU        -0.36 ! CYS patch for disulfides. Patch must be 1-CYS and 2-CYS.
                        ! use in a patch statement
                        ! follow with AUTOgenerate ANGLes DIHEdrals command
 GROUP
@@ -1636,7 +1636,7 @@ IC 1CA  1CB  1SG  2SG   0.0000  0.0000  180.0000  0.0000  0.0000
 IC 1CB  1SG  2SG  2CB   0.0000  0.0000   90.0000  0.0000  0.0000
 IC 1SG  2SG  2CB  2CA   0.0000  0.0000  180.0000  0.0000  0.0000
 
-PRES HS2          0.00 ! Patch for neutral His, move proton from ND1 to NE2
+PRES HS2          0.00 ! HSE Patch for neutral His, move proton from ND1 to NE2
                        ! use in a patch statement
                        ! follow with AUTOgenerate ANGLes DIHEdrals command
 GROUP
