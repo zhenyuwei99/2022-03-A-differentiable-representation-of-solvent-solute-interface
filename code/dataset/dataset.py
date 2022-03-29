@@ -127,23 +127,3 @@ class DatasetCreator:
                 log_lock.acquire()
                 print('Info: %s | Finish at %s' %(file_info, datetime.datetime.now().replace(microsecond=0)), file=f)
                 log_lock.release()
-
-
-if __name__ == '__main__':
-    # Dir info
-    cur_dir = os.path.dirname(os.path.abspath(__file__))
-    out_dir = os.path.join(cur_dir, '../out/model')
-    dataset_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset'
-    dataset_test_dir = os.path.join(dataset_dir, 'test')
-    dataset_train_dir = os.path.join(dataset_dir, 'train')
-    dataset_str_dir = os.path.join(dataset_dir, 'str')
-    #
-    creator = DatasetCreator(
-        os.path.join(dataset_dir, 'test.h5'),
-        os.path.join(out_dir, 'directory.txt'),
-        os.path.join(dataset_dir, 'test.log'),
-        dataset_test_dir,
-        dataset_str_dir,
-        is_restart=False
-    )
-    creator.create_dataset(12)
