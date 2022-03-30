@@ -50,6 +50,10 @@ class DatasetCreator:
         dataset_lock = manager.Lock()
         log_lock = manager.Lock()
         for target_files in target_files_list:
+            # self._parse_files(
+            #         list(target_files), self._dataset_file, self._log_file,
+            #         self._str_dir, self._directory, dataset_lock, log_lock
+            #     )
             pool.apply_async(
                 self._parse_files,
                 args= (
@@ -71,12 +75,19 @@ class DatasetCreator:
 
     def _parse_log_file(self):
         with open(self._log_file, 'r') as f:
-            res = [line.split(' | ')[0].split('Info: ')[1] for line in f.readlines() if 'Info' in line]
+            lines = f.readlines()
+            res = [
+                line.split(' | ')[0].split('Info: ')[1] for line in lines if 'Info' in line
+            ]
+            # Failed job
+            res.extend([
+                line.split(' | ')[0].split('Warn: ')[1] for line in lines if 'Psf parse failed' in line
+            ])
         return res
 
     @staticmethod
     def _parse_files(
-        file_path_list: str, dataset_file: str, log_file: str,
+        file_path_list: list[str], dataset_file: str, log_file: str,
         str_dir: str, directory: dict, dataset_lock, log_lock
     ):
         for file_path in file_path_list:
@@ -85,7 +96,16 @@ class DatasetCreator:
             file_info = file_path.split('/')[-1].split('.pdb')[0]
             file_name = file_info.split('_')[0]
             # Read data
-            topology = md.io.PSFParser(os.path.join(str_dir, file_name + '.psf')).topology
+            try:
+                topology = md.io.PSFParser(os.path.join(str_dir, file_name + '.psf')).topology
+            except:
+                log_lock.acquire()
+                with open(log_file, 'a') as f:
+                    print('Warn: %s | Psf parse failed' %(
+                        file_info
+                    ), file=f)
+                log_lock.release()
+                continue
             positions = md.io.PDBParser(file_path).positions
             # Parse data
             protein_matrix_ids = md.utils.select(topology, [{'protein': []}])
@@ -115,15 +135,16 @@ class DatasetCreator:
             coordinate_label_data[:, :3] = positions[:, :]
             coordinate_label_data[:num_proteins, 3] = 0
             coordinate_label_data[num_proteins:, 3] = 1
-
+            dataset_lock.acquire()
             with h5.File(dataset_file, 'a') as f:
-                dataset_lock.acquire()
+                if file_info in f.keys():
+                    f.__delitem__(file_info)
                 f['%s/sequence' %file_info] = sequence_data
                 f['%s/coordinate_label' %file_info] = coordinate_label_data
                 f['%s/num_protein_particles' %file_info] = sequence_data.shape[0] # Ignore unrecognized protein particles
                 f['%s/num_particles' %file_info] = coordinate_label_data.shape[0]
-                dataset_lock.release()
+            dataset_lock.release()
+            log_lock.acquire()
             with open(log_file, 'a') as f:
-                log_lock.acquire()
                 print('Info: %s | Finish at %s' %(file_info, datetime.datetime.now().replace(microsecond=0)), file=f)
-                log_lock.release()
+            log_lock.release()
