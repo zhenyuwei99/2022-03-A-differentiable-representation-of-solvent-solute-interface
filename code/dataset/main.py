@@ -10,13 +10,15 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
 import os
-from directory import DirectoryCreator
-from dataset import DatasetCreator
+import multiprocessing as mp
+from directory_creator import DirectoryCreator
+from dataset_creator import DatasetCreator
 
 if __name__ == '__main__':
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     is_create_directory = True
-    is_create_dataset = True
+    is_create_test_dataset = not True
+    is_create_train_dataset = True
     is_restart_test_dataset = not True
     is_restart_train_dataset = not True
     # Directory
@@ -28,13 +30,13 @@ if __name__ == '__main__':
         )
         directory_creator.create_directory(os.path.join(out_dir, 'directory.txt'))
     # Dataset:
-    if is_create_dataset:
-        out_dir = os.path.join(cur_dir, '../out/model')
-        dataset_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset'
-        dataset_test_dir = os.path.join(dataset_dir, 'test')
-        dataset_train_dir = os.path.join(dataset_dir, 'train')
-        dataset_str_dir = os.path.join(dataset_dir, 'str')
+    out_dir = os.path.join(cur_dir, '../out/model')
+    dataset_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset'
+    dataset_str_dir = os.path.join(dataset_dir, 'str')
+
+    if is_create_test_dataset:
         # Test dataset
+        dataset_test_dir = os.path.join(dataset_dir, 'test')
         creator = DatasetCreator(
             os.path.join(dataset_dir, 'test.h5'),
             os.path.join(out_dir, 'directory.txt'),
@@ -43,8 +45,10 @@ if __name__ == '__main__':
             dataset_str_dir,
             is_restart=is_restart_test_dataset
         )
-        creator.create_dataset(12)
+        creator.create_dataset(mp.cpu_count())
+    if is_create_train_dataset:
         # Training dataset
+        dataset_train_dir = os.path.join(dataset_dir, 'train')
         creator = DatasetCreator(
             os.path.join(dataset_dir, 'train.h5'),
             os.path.join(out_dir, 'directory.txt'),
@@ -53,4 +57,4 @@ if __name__ == '__main__':
             dataset_str_dir,
             is_restart=is_restart_train_dataset
         )
-        creator.create_dataset(12)
+        creator.create_dataset(mp.cpu_count())
