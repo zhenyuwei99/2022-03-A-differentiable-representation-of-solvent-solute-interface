@@ -46,6 +46,7 @@ if __name__ == '__main__':
             is_restart=is_restart_test_dataset
         )
         creator.create_dataset(mp.cpu_count())
+        creator.create_info_group()
     if is_create_train_dataset:
         # Training dataset
         dataset_train_dir = os.path.join(dataset_dir, 'train')
@@ -58,3 +59,4 @@ if __name__ == '__main__':
             is_restart=is_restart_train_dataset
         )
         creator.create_dataset(mp.cpu_count())
+        creator.create_info_group()
