@@ -16,6 +16,7 @@ import numpy as np
 import h5py as h5
 import multiprocessing as mp
 
+NUM_FRAMES_PER_PROTEIN = 25
 class DatasetCreator:
     def __init__(self, dataset_file: str, directory_file: str, log_file:str, dataset_dir: str, str_dir: str, is_restart=False) -> None:
         # Read input
@@ -39,17 +40,17 @@ class DatasetCreator:
 
     def create_dataset(self, num_processes: int=10):
         finished_files = self._parse_log_file()
-        target_files = [
-            os.path.join(self._dataset_dir, i) for i in os.listdir(self._dataset_dir) \
+        target_proteins = list(set([
+            i.split('_')[0] for i in os.listdir(self._dataset_dir) \
                 if i.endswith('.pdb') and not i.split('.pdb')[0] in finished_files
-        ]
-        target_files.sort()
-        target_files_list = np.array_split(target_files, num_processes)
+        ]))
+        target_proteins.sort()
+        target_proteins_list = np.array_split(target_proteins, num_processes)
         pool = mp.Pool(num_processes)
         manager = mp.Manager()
         dataset_lock = manager.Lock()
         log_lock = manager.Lock()
-        for target_files in target_files_list:
+        for target_proteins in target_proteins_list:
             # self._parse_files(
             #         list(target_files), self._dataset_file, self._log_file,
             #         self._str_dir, self._directory, dataset_lock, log_lock
@@ -57,8 +58,8 @@ class DatasetCreator:
             pool.apply_async(
                 self._parse_files,
                 args= (
-                    list(target_files), self._dataset_file, self._log_file,
-                    self._str_dir, self._directory, dataset_lock, log_lock
+                    list(target_proteins), self._dataset_file, self._log_file, finished_files,
+                    self._dataset_dir, self._str_dir, self._directory, dataset_lock, log_lock
                 )
             )
         pool.close()
@@ -87,64 +88,66 @@ class DatasetCreator:
 
     @staticmethod
     def _parse_files(
-        file_path_list: list[str], dataset_file: str, log_file: str,
-        str_dir: str, directory: dict, dataset_lock, log_lock
+        target_proteins: list[str], dataset_file: str, log_file: str, finished_files: list[str],
+        dataset_dir: str, str_dir: str, directory: dict, dataset_lock, log_lock
     ):
-        for file_path in file_path_list:
-            if not file_path.endswith('.pdb'):
-                raise KeyError('File path should endwith .pdb')
-            file_info = file_path.split('/')[-1].split('.pdb')[0]
-            file_name = file_info.split('_')[0]
-            # Read data
+        for protein in target_proteins:
             try:
-                topology = md.io.PSFParser(os.path.join(str_dir, file_name + '.psf')).topology
+                topology = md.io.PSFParser(os.path.join(str_dir, protein + '.psf')).topology
             except:
                 log_lock.acquire()
                 with open(log_file, 'a') as f:
-                    print('Warn: %s | Psf parse failed' %(
-                        file_info
-                    ), file=f)
+                    for i in range(NUM_FRAMES_PER_PROTEIN):
+                        file_info = '%s_%d' %(protein, i)
+                        if not file_info in finished_files:
+                            print('Warn: %s | Psf parse failed at %s' %(
+                                file_info,  datetime.datetime.now().replace(microsecond=0)
+                            ), file=f)
                 log_lock.release()
                 continue
-            positions = md.io.PDBParser(file_path).positions
-            # Parse data
-            protein_matrix_ids = md.utils.select(topology, [{'protein': []}])
-            num_proteins = len(protein_matrix_ids)
-
-            sequence_data = []
-            directory_keys = directory.keys()
-            for matrix_id in protein_matrix_ids:
-                particle = topology.particles[matrix_id]
-                particle_key = '%s-%s' %(
-                    particle.molecule_type, particle.particle_type
-                )
-                if particle_key in directory_keys:
-                    sequence_data.append(np.array(
-                        list(positions[matrix_id, :]) + [directory[particle_key]]
-                    ))
-                else:
+            for i in range(NUM_FRAMES_PER_PROTEIN):
+                file_path = os.path.join(dataset_dir, '%s_%d.pdb' %(protein, i))
+                file_info = '%s_%d' %(protein, i)
+                if not file_info in finished_files:
+                    # Read data
+                    positions = md.io.PDBParser(file_path).positions
+                    # Parse data
+                    protein_matrix_ids = md.utils.select(topology, [{'protein': []}])
+                    num_proteins = len(protein_matrix_ids)
+                    sequence_data = []
+                    directory_keys = directory.keys()
+                    for matrix_id in protein_matrix_ids:
+                        particle = topology.particles[matrix_id]
+                        particle_key = '%s-%s' %(
+                            particle.molecule_type, particle.particle_type
+                        )
+                        if particle_key in directory_keys:
+                            sequence_data.append(np.array(
+                                list(positions[matrix_id, :]) + [directory[particle_key]]
+                            ))
+                        else:
+                            log_lock.acquire()
+                            with open(log_file, 'a') as f:
+                                print('Warn: %s | Failed at %s-%s, particle id %d' %(
+                                    file_info, particle.molecule_type,
+                                    particle.particle_type, particle.particle_id
+                                ), file=f)
+                            log_lock.release()
+                    sequence_data = np.stack(sequence_data)
+                    coordinate_label_data = np.zeros([positions.shape[0], 4])
+                    coordinate_label_data[:, :3] = positions[:, :]
+                    coordinate_label_data[:num_proteins, 3] = 0
+                    coordinate_label_data[num_proteins:, 3] = 1
+                    dataset_lock.acquire()
+                    with h5.File(dataset_file, 'a') as f:
+                        if file_info in f.keys():
+                            f.__delitem__(file_info)
+                        f['%s/sequence' %file_info] = sequence_data
+                        f['%s/coordinate_label' %file_info] = coordinate_label_data
+                        f['%s/num_protein_particles' %file_info] = sequence_data.shape[0] # Ignore unrecognized protein particles
+                        f['%s/num_particles' %file_info] = coordinate_label_data.shape[0]
+                    dataset_lock.release()
                     log_lock.acquire()
                     with open(log_file, 'a') as f:
-                        print('Warn: %s | Failed at %s-%s, particle id %d' %(
-                            file_info, particle.molecule_type,
-                            particle.particle_type, particle.particle_id
-                        ), file=f)
+                        print('Info: %s | Finish at %s' %(file_info, datetime.datetime.now().replace(microsecond=0)), file=f)
                     log_lock.release()
-            sequence_data = np.stack(sequence_data)
-            coordinate_label_data = np.zeros([positions.shape[0], 4])
-            coordinate_label_data[:, :3] = positions[:, :]
-            coordinate_label_data[:num_proteins, 3] = 0
-            coordinate_label_data[num_proteins:, 3] = 1
-            dataset_lock.acquire()
-            with h5.File(dataset_file, 'a') as f:
-                if file_info in f.keys():
-                    f.__delitem__(file_info)
-                f['%s/sequence' %file_info] = sequence_data
-                f['%s/coordinate_label' %file_info] = coordinate_label_data
-                f['%s/num_protein_particles' %file_info] = sequence_data.shape[0] # Ignore unrecognized protein particles
-                f['%s/num_particles' %file_info] = coordinate_label_data.shape[0]
-            dataset_lock.release()
-            log_lock.acquire()
-            with open(log_file, 'a') as f:
-                print('Info: %s | Finish at %s' %(file_info, datetime.datetime.now().replace(microsecond=0)), file=f)
-            log_lock.release()
