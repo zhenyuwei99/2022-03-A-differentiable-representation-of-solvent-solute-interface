@@ -14,12 +14,20 @@ import h5py
 import numpy as np
 import torch
 import torch.utils.data as data
+from utils import DEVICE
 
 class Collect:
     def __init__(self, pad_value):
         self.padding = pad_value
 
     def __call__(self, batch_data):
+        '''
+        Return:
+        sequence_coordinate: [batch_size, sequence_length, 3]
+        sequence_label: [batch_size, sequence_length]
+        coordinate: [batch_size, 3]
+        label: [batch_size]
+        '''
         max_sequence_length = 0
         sequence, coordinate_label = [], []
         for i, _ in batch_data:
@@ -29,9 +37,9 @@ class Collect:
                 i, np.zeros([max_sequence_length-i.shape[0], i.shape[1]])
             ]))
             coordinate_label.append(j.tolist())
-        sequence = torch.tensor(np.stack(sequence))
-        coordinate_label = torch.tensor(np.stack(coordinate_label))
-        return sequence[:, :, :3], sequence[:, :, 3:], coordinate_label[:, :3], coordinate_label[:, 3:]
+        sequence = torch.tensor(np.stack(sequence), device=DEVICE)
+        coordinate_label = torch.tensor(np.stack(coordinate_label), device=DEVICE)
+        return sequence[:, :, :3], sequence[:, :, 3:].int(), coordinate_label[:, :3], coordinate_label[:, 3].int()
 
 
 class SolvatedProteinDataset(data.Dataset):
