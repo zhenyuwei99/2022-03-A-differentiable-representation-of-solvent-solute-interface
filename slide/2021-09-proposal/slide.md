@@ -4,7 +4,6 @@ theme: default
 paginate: true
 color: blackz
 footer: "Zhenyu Wei, Sep 2021"
-header: <img src="./images/seu_logo.png" height=100>
 ---
 <style>
   section {
@@ -12,7 +11,7 @@ header: <img src="./images/seu_logo.png" height=100>
       font-family: 'Helvetica',  !important;
       font-size: 35px;
     }
-  
+
   header {
     position: absolute;
     left: 1146px;
@@ -56,8 +55,8 @@ header: <img src="./images/seu_logo.png" height=100>
     grid-template-areas: "leftpanel rightpanel";
 }
 /* debug */
-section.split h3, 
-section.split .ldiv, 
+section.split h3,
+section.split .ldiv,
 section.split .rdiv { border: 0pt dashed dimgray; }
 section.split h3 {
     grid-area: slideheading;
@@ -65,22 +64,20 @@ section.split h3 {
 }
 section.split .ldiv { grid-area: leftpanel; }
 section.split .rdiv { grid-area: rightpanel; }
-  
+
 </style>
-<center>
 
-# A differentiable representation of 
-# solvent-solute interface
 
-<br>
+# A differentiable representation of solvent-solute interface
 
-Reporter: **Zhenyu Wei** 
+Reporter: **Zhenyu Wei**
 
 Mentor: **Yunfei Chen**
 
-School of mechanical engineering
-Southeast University
+<br>
 
+**School of mechanical engineering
+Southeast University**
 
 ---
 
@@ -100,7 +97,7 @@ Southeast University
 <br>
 
 $$
-\nabla\varepsilon(\mathbf{r})\nabla\phi(\mathbf{r}) = - \rho_{mol}(\mathbf{r}) -\lambda(\mathbf{r})\kappa^2\mathrm{sinh}\left(-\frac{z_+e\phi(\mathbf{r})}{kT}\right) 
+\nabla\varepsilon(\mathbf{r})\nabla\phi(\mathbf{r}) = - \rho_{mol}(\mathbf{r}) -\lambda(\mathbf{r})\kappa^2\mathrm{sinh}\left(-\frac{z_+e\phi(\mathbf{r})}{kT}\right)
 $$
 
 <br>
@@ -123,7 +120,7 @@ A <b><font color=red size=7>differentiable</font></b>  expression of $\varepsilo
 <br>
 
 - The surface can be interpreted as a **complex spatial distribution**
-  
+
 - The spatial distribution is highly **non-linear**
 
 - The distribution depends on all of the atom's **position** and **type**
@@ -191,7 +188,7 @@ A smooth, differentiable, interface representation for solution of **PBE**
 - Currently, sampled **4458** structures
 
   - Label solution atom as 1
-  
+
   - Label solvent atom as 0
 
 
@@ -221,7 +218,7 @@ A smooth, differentiable, interface representation for solution of **PBE**
 
   - Each with 25 samples
 
-- Average accuracy: 92%  
+- Average accuracy: 92%
 
 - Isosurface with output value of TSSIR between [0.495, 0.505]
 
