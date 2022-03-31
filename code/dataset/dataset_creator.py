@@ -69,22 +69,23 @@ class DatasetCreator:
             print('Start create group')
             if 'info' in f.keys():
                 f.__delitem__('info')
-            index_list, cur_index = [], 0
-            keys = self._parse_log_file(False)
+            index_list, cur_index, max_sequence_length = [], 0, 0
+            keys = list(f.keys())
             keys.sort()
             num_keys = len(keys)
             for index, key in enumerate(keys):
                 if index % 500 == 0:
                     print('%.2f %% finished' %(index/num_keys*100))
-                try:
-                    index_list.append(cur_index)
-                    cur_index += f['%s/num_particles' %key][()]
-                except:
-                    pass
+                index_list.append(cur_index)
+                cur_index += f['%s/num_particles' %key][()]
+                sequence_length = f['%s/num_protein_particles' %key][()]
+                if sequence_length > max_sequence_length:
+                    max_sequence_length = sequence_length
             f['info/index_list'] = index_list
             f['info/num_particles'] = cur_index
             f['info/protein_list'] = keys
             f['info/num_proteins'] = num_keys
+            f['info/max_sequence_length'] = max_sequence_length
             print('Finish create group')
 
     def _parse_directory_file(self):
@@ -96,17 +97,16 @@ class DatasetCreator:
                 line = f.readline()
         self._directory_keys = self._directory.keys()
 
-    def _parse_log_file(self, is_contain_failed=True):
+    def _parse_log_file(self):
         with open(self._log_file, 'r') as f:
             lines = f.readlines()
             res = [
                 line.split(' | ')[0].split('Info: ')[1] for line in lines if 'Info' in line
             ]
-            if is_contain_failed:
-                # Failed job
-                res.extend([
-                    line.split(' | ')[0].split('Warn: ')[1] for line in lines if 'Psf parse failed' in line
-                ])
+            # Failed job
+            res.extend([
+                line.split(' | ')[0].split('Warn: ')[1] for line in lines if 'Psf parse failed' in line
+            ])
         return res
 
     @staticmethod
