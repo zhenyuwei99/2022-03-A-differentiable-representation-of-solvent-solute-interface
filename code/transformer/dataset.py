@@ -9,6 +9,7 @@ contact : zhenyuwei99@gmail.com
 copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
+import time
 import h5py
 import numpy as np
 import torch
@@ -38,7 +39,7 @@ class SolvatedProteinDataset(data.Dataset):
         super().__init__()
         self._dataset_file = dataset_file
         self._dataset = h5py.File(self._dataset_file, 'r')
-        self._index_list = self._dataset['info/index_list'][()]
+        self._index_list = np.array(self._dataset['info/index_list'][()])
         self._num_particles = self._dataset['info/num_particles'][()]
         self._protein_list = self._dataset['info/protein_list'][()]
         self._num_proteins = self._dataset['info/num_proteins'][()]
@@ -47,11 +48,8 @@ class SolvatedProteinDataset(data.Dataset):
         return self._num_particles
 
     def __getitem__(self, index: int):
-        protein_index, particle_index = 0, 0
-        for i, j in enumerate(self._index_list):
-            if j <= index:
-                protein_index = i
-                particle_index = index - j
+        protein_index = np.searchsorted(self._index_list, index, side="left") - 1
+        particle_index =  index - self._index_list[protein_index]
         key = bytes.decode(self._protein_list[protein_index])
         return (
             self._dataset['%s/sequence' %key][()],
