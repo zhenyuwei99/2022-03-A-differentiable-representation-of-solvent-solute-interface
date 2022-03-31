@@ -46,7 +46,7 @@ class Encoder(nn.Module):
     def __init__(
         self, dim_model, dim_k, dim_ffn,
         directory_size, num_layers, num_heads,
-        dropout=0.1, max_sequence_length=1000
+        dropout=0.1, max_sequence_length=10000
     ) -> None:
         super().__init__()
         self._dim_model = dim_model
@@ -149,7 +149,7 @@ class Transformer(nn.Module):
     def __init__(
         self, dim_model, dim_k, dim_ffn,
         directory_size, num_layers, num_heads,
-        dropout=0.1, max_sequence_length=1000
+        dropout=0.1, max_sequence_length=10000
     ) -> None:
         super().__init__()
         self._dim_model = dim_model
