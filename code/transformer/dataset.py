@@ -48,14 +48,13 @@ class SolvatedProteinDataset(data.Dataset):
         return self._num_particles
 
     def __getitem__(self, index: int):
-        protein_index = np.searchsorted(self._index_list, index, side="left") - 1
+        protein_index = np.searchsorted(self._index_list, index, side='right') - 1 # a[i-1] <= v < a[i]
         particle_index =  index - self._index_list[protein_index]
         key = bytes.decode(self._protein_list[protein_index])
         return (
             self._dataset['%s/sequence' %key][()],
             self._dataset['%s/coordinate_label' %key][(particle_index)]
         )
-
     @property
     def num_particles(self):
         return self._num_particles
