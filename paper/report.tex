@@ -1,0 +1,103 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath, amssymb, amscd, amsthm, amsfonts}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage[super,square]{natbib}
+\usepackage{hyperref}
+%\usepackage{subfigure}
+%\usepackage{xspace}
+%\usepackage{diagbox}
+%\usepackage{booktabs}
+%\usepackage{listings}
+%\usepackage{setspace}
+%\usepackage{multirow}
+%\usepackage{siunitx}
+%\usepackage{booktabs}
+%\usepackage{comment}
+%\usepackage{subfigure}
+\usepackage[margin = 1in]{geometry}
+\usepackage{adjustbox}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\usepackage{inputenc}
+\usepackage{authblk}
+\usepackage{lineno}
+
+\pagestyle{fancy}
+
+\makeatletter
+\def\@maketitle{%
+  \newpage
+  \null
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE \@title \par}%
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+  \end{center}%
+  \par}
+\makeatother
+
+\lhead{Southeast Univeristy}
+
+\title{\textbf{A differentiable representation of solvent-solute interface}}
+\author[$\dagger$]{Zhenyu Wei}
+\author[$\dagger$]{Yunfei Chen \thanks{Corresponding author: yunfeichen@seu.edu.cn}}
+\affil[$\dagger$]{School of Mechanical Engineering, Southeast University, Nanjing, China}
+\renewcommand*{\Affilfont}{\small\it} % 修改机构名称的字体与大小
+\renewcommand\Authands{\ ,\ }
+\date{}
+\setlength{\parindent}{0pt}
+\setmainfont{Times New Roman}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\DeclareMathOperator{\lcm}{lcm}
+
+\newcommand{\rr}{\mathbb{R}}
+
+\newcommand{\al}{\alpha}
+\newcommand{\Celese}[1]{#1^{\circ}C}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\aff}{aff}
+\everymath{\displaystyle}
+
+\linespread{1.5}
+
+\begin{document}
+\linenumbers
+\bibliographystyle{unsrt}
+\maketitle
+
+\begin{abstract}
+  The biophysical processes of protein, include ligand binding, protein folding, have attracted lots of interest for decades. Implicit solvent models are widely used to research these processes in silico, as the explicitly solvated protein model is too expensive to be simulated. A critical step of constituting an effective implicit solvent model is representing the solvent-solute interface properly. However, most current representations are based on specific geometric criteria, making the interface derivative hard to calculate. To overcome this difficulty, we introduced a Transformer-like neural network to represent the solvent-solute interface. This network is trained on a dataset containing 8000 all-atom solvated protein models and has a good generalization ability for the untrained protein structure. %后面要写 拟合的结果 验证的结果
+\end{abstract}
+
+\section{Introduction}
+  % 首先介绍implicit solvent的意义，前面可以加一点大话
+  % 再介绍interface representation再其中的作用 包括 non-polar 和 polar部分 提出为什么可微和可并行很重要
+  % 然后提出
+  % - 我们的目标： 给定任意一个蛋白质的所有原子坐标，给出一个边界的关于x,y,z的表达式）
+  % - 解决方案： 为了解决seq21的问题，采用Transformer型的网络结构进行训练
+  %   - 这里要介绍一下Transformer 成就 以及特点 也就是可以处理并行的（相对于RNN）seq并很好的考虑上下文（context）
+  Since Max Perutz and John Kendrew resolved the Myoglobin's structure in 1960\cite{protein_str_01,protein_str_02,protein_str_03}, the native structure of protein has attracted many scientists for over six decades, as this knowledge is germane for the advanced research in many area, for example: pharmaceutics\cite{drug-01,drug-02,drug-03}, enzyme catalysis mechanism\cite{enzyme-01,enzyme-02, enzyme-03, enzyme-04},
+
+\section{Method}
+
+  \subsection{Dataset constitution}
+
+  \subsection{Model architecture}
+
+\section{Result}
+
+\section{Conclusion}
+
+\bibliography{ref}
+
+\end{document}
