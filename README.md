@@ -1,1 +1,5 @@
-# 2022-03-A-differentiable-representation-of-solvent--solute-interface
+# A differentiable representation of solvent-solute interface
+
+## Network framework
+
+![](./paper/image/network_framework.png)
