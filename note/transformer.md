@@ -5,8 +5,10 @@
 
 - $N$: The layer of encoder and decoder
 - $d_{model}$: The number of elements in the dictionary
-- $d_{ff}$
+- $d_{ff}$: Dimension of FFN
 - $h$: The number of heads
+- $d_k$, $d_v$: dimension of key and value
+- $P_{drop}$: dropout rate
 
 # Input representation
 
@@ -56,6 +58,8 @@ Calculating Attention:
 $$
 \mathrm{Attention}(Q, K, V) = \mathrm{softmax}\left(\frac{QK^T}{\sqrt{d_K}}\right) V
 $$
+
+![](./image/qkv.jpg)
 
 ![](./image/attention_mat.jpeg)
 
