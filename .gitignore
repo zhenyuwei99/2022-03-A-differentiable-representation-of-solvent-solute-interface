@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # paper tex files
-paper/report.synctex.gz
+paper/*.synctex.gz
 
 # Distribution / packaging
 .Python
