@@ -16,18 +16,30 @@ import torch
 import torch.utils.data as data
 from utils import DEVICE
 
+def sample_particles(num_samples: int, num_particles:int, num_protein_particles:int):
+    res = []
+    num_protein_samples = num_samples // 2
+    num_solvent_samples = num_samples - num_protein_samples
+    res.extend(list(np.random.randint(0, num_protein_particles, size=num_protein_samples)))
+    res.extend(list(np.random.randint(num_protein_particles, num_particles, size=num_solvent_samples)))
+    return res
+
 class Collect:
     def __init__(self, pad_value):
         self.padding = pad_value
 
     def __call__(self, batch_data):
         '''
+        Batch data:
+        sequence: [sequence_length, 4]
+        coordinate: [num_particles, 4]
         Return:
         sequence_coordinate: [batch_size, sequence_length, 3]
         sequence_label: [batch_size, sequence_length]
-        coordinate: [batch_size, 3]
-        label: [batch_size]
+        coordinate: [batch_size, num_particles, 3]
+        label: [batch_size, num_particles, 3]
         '''
+        num_samples = np.random.randint(5, 50)
         max_sequence_length = 0
         sequence, coordinate_label = [], []
         for i, _ in batch_data:
@@ -36,10 +48,10 @@ class Collect:
             sequence.append(np.vstack([
                 i, np.zeros([max_sequence_length-i.shape[0], i.shape[1]])
             ]))
-            coordinate_label.append(j.tolist())
+            coordinate_label.append(j[sample_particles(num_samples, j.shape[0], i.shape[0]), :])
         sequence = torch.tensor(np.stack(sequence), device=DEVICE)
         coordinate_label = torch.tensor(np.stack(coordinate_label), device=DEVICE)
-        return sequence[:, :, :3], sequence[:, :, 3:].int(), coordinate_label[:, :3], coordinate_label[:, 3].int()
+        return sequence[:, :, :3], sequence[:, :, 3:].int(), coordinate_label[:, :, :3], coordinate_label[:, :, 3].int()
 
 
 class SolvatedProteinDataset(data.Dataset):
@@ -61,7 +73,7 @@ class SolvatedProteinDataset(data.Dataset):
         key = bytes.decode(self._protein_list[protein_index])
         return (
             self._dataset['%s/sequence' %key][()],
-            self._dataset['%s/coordinate_label' %key][(particle_index)]
+            self._dataset['%s/coordinate_label' %key][()]
         )
     @property
     def num_particles(self):
