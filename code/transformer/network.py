@@ -104,9 +104,9 @@ class DecoderLayer(nn.Module):
     def forward(self, decoder_input: torch.Tensor, encoder_input: torch.Tensor):
         '''
         encoder_input: [batch_size, sequence_length, dim_model]
-        decoder_input: [batch_size, 1, dim_model]
+        decoder_input: [batch_size, num_samples, dim_model]
         '''
-        # decoder_output: [batch_size, 1, dim_model]
+        # decoder_output: [batch_size, num_samples, dim_model]
         decoder_output = self._encoder_self_attention(
             decoder_input, encoder_input, encoder_input
         )
@@ -132,15 +132,13 @@ class Decoder(nn.Module):
 
     def forward(self, decoder_input: torch.Tensor, encoder_input: torch.Tensor):
         '''
-        decoder_input: [batch_size, 3]
+        decoder_input: [batch_size, num_samples, 3]
         encoder_input: [batch_size, sequence_length, dim_model]
         '''
-        # decoder_input: [batch_size, 1, 3]
-        decoder_input = decoder_input.unsqueeze(1)
-        # decoder_input: [batch_size, 1, dim_model]
+        # decoder_input: [batch_size, num_samples, dim_model]
         decoder_output = self.W_Input(decoder_input)
         for layer in self.layers:
-            # decoder: [batch_size, 1, dim_model]
+            # decoder: [batch_size, num_samples, dim_model]
             decoder_output = layer(decoder_output, encoder_input)
         return decoder_output
 
