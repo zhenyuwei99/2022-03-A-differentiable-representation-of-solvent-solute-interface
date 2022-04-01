@@ -24,6 +24,8 @@ if __name__ == '__main__':
     out_dir = os.path.join(cur_dir, '../out/model/')
     directory_file = os.path.join(out_dir, 'directory.txt')
     dataset_file = '/home/zhenyuwei/Documents/solvated_protein_dataset/train.h5'
+    log_file = os.path.join(out_dir, 'train.log')
+    open(log_file, 'w').close()
     # Hyper Parameters
     dim_model = 64
     dim_ffn = 256
@@ -51,12 +53,19 @@ if __name__ == '__main__':
         np.random.randint(0, dataset.num_particles, size=num_samples_per_epoch)
     )
     loader = data.DataLoader(dataset, batch_size=2, sampler=sampler, collate_fn=Collect(0))
+    iteration = 0
     for epoch in range(num_epochs):
         for sequence_coordinate, sequence_label, coordinate, label in loader:
             # output: [Batch_size]
             output = model(sequence_coordinate, sequence_label, coordinate)
             loss = criterion(output.float(), label.float())
-            print('Epoch:', '%04d' % (epoch + 1), 'loss =', '{:.6f}'.format(loss))
+            with open(log_file, 'r') as f:
+                print(
+                    'Epoch %02d, Iteration %06d' %(epoch+1, iteration+1), 
+                    'loss =', '{:.6f}'.format(loss), file=f
+                )
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            iteration += 1
+        epoch += 1
