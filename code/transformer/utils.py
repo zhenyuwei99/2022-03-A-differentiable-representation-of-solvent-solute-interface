@@ -10,7 +10,6 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
 import torch
-import numpy as np
 import torch.nn as nn
 
 DEVICE = torch.device('cpu')
