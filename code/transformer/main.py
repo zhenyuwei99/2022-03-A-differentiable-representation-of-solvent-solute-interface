@@ -57,7 +57,6 @@ if __name__ == '__main__':
             output = model(sequence_coordinate, sequence_label, coordinate)
             loss = criterion(output.float(), label.float())
             print('Epoch:', '%04d' % (epoch + 1), 'loss =', '{:.6f}'.format(loss))
-            print(output, label)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
