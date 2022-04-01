@@ -32,12 +32,12 @@ class Collect:
         '''
         Batch data:
         sequence: [sequence_length, 4]
-        coordinate: [num_particles, 4]
+        coordinate: [num_samples, 4]
         Return:
         sequence_coordinate: [batch_size, sequence_length, 3]
         sequence_label: [batch_size, sequence_length]
-        coordinate: [batch_size, num_particles, 3]
-        label: [batch_size, num_particles, 3]
+        coordinate: [batch_size, num_samples, 3]
+        label: [batch_size, num_samples, 3]
         '''
         num_samples = np.random.randint(5, 50)
         max_sequence_length = 0
