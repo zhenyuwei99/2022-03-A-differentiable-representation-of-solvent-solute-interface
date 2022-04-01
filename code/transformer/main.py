@@ -29,7 +29,7 @@ num_heads = 8
 is_training_restart = True
 num_epochs = 10
 num_proteins_per_epoch = 5000
-save_interval = 10
+save_interval = 100
 # Dirs
 dataset_dir = '/home/zhenyuwei/Documents/solvated_protein_dataset'
 cur_dir = os.path.dirname(os.path.abspath(__file__))
