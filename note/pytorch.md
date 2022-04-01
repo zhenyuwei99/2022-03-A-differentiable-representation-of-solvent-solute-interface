@@ -302,3 +302,23 @@ tensor([[ 1.0028, -0.1669],
 Returns a view of this tensor with the last two dimensions transposed.
 
 `x.mT` is equivalent to `x.transpose(-2, -1)`.
+
+# Save and load model
+Based on `state_dict`
+
+## Save
+```python
+torch.save(model.state_dict(), PATH)
+```
+
+## Load
+```python
+model = TheModelClass(*args, **kwargs)
+model.load_state_dict(torch.load(PATH))
+```
+
+Remember the to specify the network mode:
+```python
+model.eval()
+model.train()
+```
