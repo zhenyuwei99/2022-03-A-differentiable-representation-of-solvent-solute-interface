@@ -14,7 +14,7 @@ import h5py
 import numpy as np
 import torch
 import torch.utils.data as data
-from utils import DEVICE
+from utils import *
 
 def sample_particles(num_samples: int, num_particles:int, num_protein_particles:int):
     res = []
@@ -49,8 +49,8 @@ class Collect:
                 i, np.zeros([max_sequence_length-i.shape[0], i.shape[1]])
             ]))
             coordinate_label.append(j[sample_particles(num_samples, j.shape[0], i.shape[0]), :])
-        sequence = torch.tensor(np.stack(sequence), device=DEVICE)
-        coordinate_label = torch.tensor(np.stack(coordinate_label), device=DEVICE)
+        sequence = torch.tensor(np.stack(sequence), dtype=DATA_TYPE, device=DEVICE)
+        coordinate_label = torch.tensor(np.stack(coordinate_label), dtype=DATA_TYPE, device=DEVICE)
         return sequence[:, :, :3], sequence[:, :, 3:].int(), coordinate_label[:, :, :3], coordinate_label[:, :, 3].int()
 
 
