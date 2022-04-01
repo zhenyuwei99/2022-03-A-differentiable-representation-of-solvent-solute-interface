@@ -14,7 +14,7 @@ import numpy as np
 import torch.nn as nn
 
 DEVICE = torch.device('cpu')
-DATA_TYPE = torch.float64
+DATA_TYPE = torch.float32
 DIM_COORDINATE = 3
 
 # Parse directory file
