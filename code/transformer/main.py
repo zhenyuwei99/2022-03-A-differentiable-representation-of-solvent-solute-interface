@@ -46,7 +46,7 @@ if __name__ == '__main__':
         dropout=0.1, max_sequence_length=max_sequence_length + 100
     )
     criterion = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=1e-3, momentum=0.99)
+    optimizer = optim.SGD(model.parameters(), lr=1e-3, momentum=0.99, weight_decay=0.001)
     sampler = data.SubsetRandomSampler(
         np.random.randint(0, dataset.num_particles, size=num_samples_per_epoch)
     )
