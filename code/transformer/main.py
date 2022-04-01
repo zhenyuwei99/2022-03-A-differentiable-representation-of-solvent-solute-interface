@@ -59,9 +59,9 @@ if __name__ == '__main__':
             # output: [Batch_size]
             output = model(sequence_coordinate, sequence_label, coordinate)
             loss = criterion(output.float(), label.float())
-            with open(log_file, 'r') as f:
+            with open(log_file, 'a') as f:
                 print(
-                    'Epoch %02d, Iteration %06d' %(epoch+1, iteration+1), 
+                    'Epoch %02d, Iteration %06d' %(epoch+1, iteration+1),
                     'loss =', '{:.6f}'.format(loss), file=f
                 )
             optimizer.zero_grad()
