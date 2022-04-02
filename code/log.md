@@ -5,6 +5,7 @@
 - [x] Implementation of weighted sampler; Complete at 2022-04-01
 - [x] Regularization of transformer; Complete at 2022-04-01
 - [x] Code for testing performance; Complete at 2022-04-02
+- [x] Code for visualizing performance; Complete at 2022-04-02
 
 # 2022-03-31
 ## Progress
@@ -24,3 +25,4 @@
 # 2022-04-02
 ## Solved questions
 - Implementing code for testing the performance
+- Implementing visualization code
