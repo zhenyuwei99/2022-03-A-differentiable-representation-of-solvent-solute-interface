@@ -12,6 +12,7 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 import os, shutil
 import h5py
 import torch
+import numpy as np
 from network import DATA_TYPE, DEVICE
 from run import *
 
@@ -24,7 +25,7 @@ mol addrep top
 
 mol new %s.xyz
 mol delrep 0 top
-mol representation QuickSurf
+mol representation Line
 mol addrep top
 '''
 
@@ -46,44 +47,44 @@ if __name__ == '__main__':
     # Dataset and dataloader
     dataset = SolvatedProteinDataset(test_dataset_file, is_return_key=True)
     # Predict
-    index = 40
-    key = dataset[index][0]
-    sequence = torch.tensor(dataset[index][1]).to(DATA_TYPE).to(DEVICE)
-    sequence_coordinate, sequence_label = sequence[:, :3], sequence[:, 3].int()
+    for index in np.random.randint(0, len(dataset), 200):
+        key = dataset[index][0]
+        sequence = torch.tensor(dataset[index][1]).to(DATA_TYPE).to(DEVICE)
+        sequence_coordinate, sequence_label = sequence[:, :3], sequence[:, 3].int()
 
-    x, y, z = np.linspace(-60, 60, 150), np.linspace(-60, 60, 150), np.linspace(-60, 60, 150)
-    X, Y, Z = np.meshgrid(x, y, z)
-    coordinate = torch.tensor(np.stack([X.reshape([-1]), Y.reshape([-1]), Z.reshape([-1])]).T).to(DATA_TYPE).to(DEVICE)
+        x, y, z = np.linspace(-60, 60, 150), np.linspace(-60, 60, 150), np.linspace(-60, 60, 150)
+        X, Y, Z = np.meshgrid(x, y, z)
+        coordinate = torch.tensor(np.stack([X.reshape([-1]), Y.reshape([-1]), Z.reshape([-1])]).T).to(DATA_TYPE).to(DEVICE)
 
-    num_samples = coordinate.size()[0]
-    result = np.zeros([num_samples])
-    num_samples_per_epoch = 1000
-    num_epochs = num_samples // num_samples_per_epoch
+        num_samples = coordinate.size()[0]
+        result = np.zeros([num_samples])
+        num_samples_per_epoch = 10000
+        num_epochs = num_samples // num_samples_per_epoch
 
-    with torch.no_grad():
-        encoder_output = model.encoder(sequence_coordinate.unsqueeze(0), sequence_label.unsqueeze(0))
-        for i in range(num_epochs):
+        with torch.no_grad():
+            encoder_output = model.encoder(sequence_coordinate.unsqueeze(0), sequence_label.unsqueeze(0))
+            for i in range(num_epochs):
+                decoder_output = model.decoder(
+                    coordinate[num_samples_per_epoch*i:num_samples_per_epoch*(i+1), :].unsqueeze(0), encoder_output
+                )
+                result[num_samples_per_epoch*i:num_samples_per_epoch*(i+1)] = model.ffn(decoder_output).squeeze().cpu()
+                print('Finish %d:%d'%(num_samples_per_epoch*i, num_samples_per_epoch*(i+1)))
             decoder_output = model.decoder(
-                coordinate[num_samples_per_epoch*i:num_samples_per_epoch*(i+1), :].unsqueeze(0), encoder_output
+                coordinate[num_samples_per_epoch*num_epochs:, :].unsqueeze(0), encoder_output
             )
-            result[num_samples_per_epoch*i:num_samples_per_epoch*(i+1)] = model.ffn(decoder_output).squeeze().cpu()
-            print('Finish %d:%d'%(num_samples_per_epoch*i, num_samples_per_epoch*(i+1)))
-        decoder_output = model.decoder(
-            coordinate[num_samples_per_epoch*num_epochs:, :].unsqueeze(0), encoder_output
-        )
-        result[num_samples_per_epoch*num_epochs:] = model.ffn(decoder_output).squeeze().cpu()
-    result = coordinate[np.argwhere(result < 0.5), :].squeeze().cpu()
-    # Visualize
-    target_dir = os.path.join(out_dir, key)
-    if os.path.exists(target_dir):
-        shutil.rmtree(target_dir)
-    os.mkdir(target_dir)
-    xyz_file = os.path.join(target_dir, '%s.xyz' %key)
-    with open(xyz_file, 'w') as f:
-        print('%d\n' %result.size()[0], file=f)
-        for coord in result:
-            print('H\t%.5f\t%.5f\t%.5f' %(coord[0], coord[1], coord[2]), file=f)
-    tcl_file = os.path.join(target_dir, 'vis.tcl')
-    with open(tcl_file, 'w') as f:
-        print(generate_tcl_text(key), file=f)
-    os.system('cp %s/%s.pdb %s' %(pdb_dir, key, target_dir))
+            result[num_samples_per_epoch*num_epochs:] = model.ffn(decoder_output).squeeze().cpu()
+        result = coordinate[np.argwhere(result < 0.5), :].squeeze().cpu()
+        # Visualize
+        target_dir = os.path.join(out_dir, key)
+        if os.path.exists(target_dir):
+            shutil.rmtree(target_dir)
+        os.mkdir(target_dir)
+        xyz_file = os.path.join(target_dir, '%s.xyz' %key)
+        with open(xyz_file, 'w') as f:
+            print('%d\n' %result.size()[0], file=f)
+            for coord in result:
+                print('H\t%.5f\t%.5f\t%.5f' %(coord[0], coord[1], coord[2]), file=f)
+        tcl_file = os.path.join(target_dir, 'vis.tcl')
+        with open(tcl_file, 'w') as f:
+            print(generate_tcl_text(key), file=f)
+        os.system('cp %s/%s.pdb %s' %(pdb_dir, key, target_dir))
