@@ -1,10 +1,10 @@
 # To Do list:
-- [ ] Code for testing performance
 - [ ] Adding dropout layer
 - [x] Model serialization and save; Complete at 2022-04-01
 - [x] Validating using multi-coordinates as the input of decoder; Complete at 2022-04-01
 - [x] Implementation of weighted sampler; Complete at 2022-04-01
 - [x] Regularization of transformer; Complete at 2022-04-01
+- [x] Code for testing performance; Complete at 2022-04-02
 
 # 2022-03-31
 ## Progress
@@ -20,3 +20,7 @@
 
 ## Progress
 - Starting GPU training on the HPC
+
+# 2022-04-02
+## Solved questions
+- Implementing code for testing the performance

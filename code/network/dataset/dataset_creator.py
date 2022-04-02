@@ -15,8 +15,8 @@ import mdpy as md
 import numpy as np
 import h5py as h5
 import multiprocessing as mp
+from network import NUM_FRAMES_PER_PROTEIN
 
-NUM_FRAMES_PER_PROTEIN = 25
 class DatasetCreator:
     def __init__(self, dataset_file: str, directory_file: str, log_file:str, dataset_dir: str, str_dir: str, is_restart=False) -> None:
         # Read input

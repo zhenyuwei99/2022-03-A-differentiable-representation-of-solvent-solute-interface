@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-file : main.py
+file : train.py
 created time : 2022/03/28
 author : Zhenyu Wei
 version : 1.0
@@ -9,77 +9,31 @@ contact : zhenyuwei99@gmail.com
 copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
-import os
 import datetime
 import numpy as np
 import h5py
 import torch
 import torch.optim as optim
 import torch.utils.data as data
-from dataset import *
-from utils import *
-from network import *
-torch.cuda.set_per_process_memory_fraction(1., 0)
-# Model Hyperparameters
-dim_model = 32
-dim_ffn = 256
-dim_k = dim_v = 32
-num_layers = 6
-num_heads = 2
-# Traning Hyperparameters
-is_training_restart = not True
-batch_size = 1
-max_num_samples = 1000
-num_epochs = 100
-num_proteins_per_epoch = 5000
-save_interval = 100
-log_interval = 50
-# Dirs
-dataset_dir = '/home/zhenyuwei/Documents/solvated_protein_dataset'
-cur_dir = os.path.dirname(os.path.abspath(__file__))
-out_dir = os.path.join(cur_dir, '../out/model/')
-# File pathes
-directory_file = os.path.join(out_dir, 'directory.txt')
-dataset_file = os.path.join(dataset_dir, 'train.h5')
-log_file = os.path.join(out_dir, 'train.log')
-model_file = os.path.join(out_dir, 'model.pt')
-
-def load_model(file_path: str):
-    model = Transformer(
-        dim_model=dim_model, dim_k=dim_k, dim_ffn=dim_ffn,
-        directory_size=num_directory_keys,
-        num_layers=num_layers, num_heads=num_heads,
-        dropout=0.1, max_sequence_length=max_sequence_length + 100
-    )
-    model.load_state_dict(torch.load(file_path))
-    return model
-
-def save_model(model:nn.Module, file_path: str):
-    torch.save(model.state_dict(), file_path)
+from run import *
 
 if __name__ == '__main__':
     # Read data
-    with h5py.File(dataset_file, 'r') as f:
-        max_sequence_length = f['info/max_sequence_length'][()]
-    directory, num_directory_keys = parse_directory(directory_file)
+    with h5py.File(train_dataset_file, 'r') as f:
+            max_sequence_length = f['info/max_sequence_length'][()]
     # Initialization
     if is_training_restart:
         with open(log_file, 'w') as f:
             print('Start training at %s' %datetime.datetime.now().replace(microsecond=0), file=f)
-        model = Transformer(
-            dim_model=dim_model, dim_k=dim_k, dim_ffn=dim_ffn,
-            directory_size=num_directory_keys,
-            num_layers=num_layers, num_heads=num_heads,
-            dropout=0.1, max_sequence_length=max_sequence_length+100
-        )
+        model = init_model(max_sequence_length)
     else:
         with open(log_file, 'a') as f:
             print('Restart training at %s' %datetime.datetime.now().replace(microsecond=0), file=f)
-        model = load_model(model_file)
+        model = load_model(model_file, max_sequence_length)
     model.to(DEVICE)
     model.train()
     # Dataset and dataloader
-    dataset = SolvatedProteinDataset(dataset_file)
+    dataset = SolvatedProteinDataset(train_dataset_file)
     sampler = data.SubsetRandomSampler(
         np.random.randint(0, len(dataset), size=num_proteins_per_epoch)
     )
@@ -87,7 +41,7 @@ if __name__ == '__main__':
     # Train
     criterion = nn.MSELoss()
     # criterion = nn.CrossEntropyLoss(reduction='sum')
-    optimizer = optim.Adam(model.parameters(), lr=1e-5, weight_decay=0.0001)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     # optimizer = optim.SGD(model.parameters(), lr=1e-5, momentum=0.99, weight_decay=0.001)
     iteration = 0
     for epoch in range(num_epochs):

@@ -11,10 +11,7 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 
 import torch
 import torch.nn as nn
-
-DEVICE = torch.device('cuda')
-DATA_TYPE = torch.float32
-DIM_COORDINATE = 3
+from network import DATA_TYPE, DEVICE
 
 # Parse directory file
 def parse_directory(directory_file: str):

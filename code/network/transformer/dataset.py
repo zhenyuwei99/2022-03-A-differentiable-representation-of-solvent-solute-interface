@@ -13,7 +13,8 @@ import h5py
 import numpy as np
 import torch
 import torch.utils.data as data
-from utils import *
+from network import DATA_TYPE, DEVICE
+from network.transformer.utils import *
 
 def sample_particles(num_samples: int, num_particles:int, num_protein_particles:int):
     res = []
@@ -55,9 +56,10 @@ class Collect:
 
 
 class SolvatedProteinDataset(data.Dataset):
-    def __init__(self, dataset_file: str) -> None:
+    def __init__(self, dataset_file: str, is_return_key=False) -> None:
         super().__init__()
         self._dataset_file = dataset_file
+        self._is_return_key = is_return_key
         self._dataset = h5py.File(self._dataset_file, 'r')
         self._index_list = np.array(self._dataset['info/index_list'][()])
         self._num_particles = self._dataset['info/num_particles'][()]
@@ -69,10 +71,17 @@ class SolvatedProteinDataset(data.Dataset):
 
     def __getitem__(self, index: int):
         key = bytes.decode(self._protein_list[index])
-        return (
-            self._dataset['%s/sequence' %key][()],
-            self._dataset['%s/coordinate_label' %key][()]
-        )
+        if self._is_return_key:
+            return (
+                key,
+                self._dataset['%s/sequence' %key][()],
+                self._dataset['%s/coordinate_label' %key][()]
+            )
+        else:
+            return (
+                self._dataset['%s/sequence' %key][()],
+                self._dataset['%s/coordinate_label' %key][()]
+            )
     @property
     def num_particles(self):
         return self._num_particles

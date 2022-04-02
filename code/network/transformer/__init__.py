@@ -2,5 +2,8 @@ __author__ = "Zhenyu Wei"
 __maintainer__ = "Zhenyu Wei"
 __email__ = "zhenyuwei99@gmail.com"
 __copyright__ = "Copyright 2021-2021, Southeast University and Zhenyu Wei"
-__license__ = "GPLv3"
+__license__ = "MIT"
 
+import network.transformer.dataset as dataset
+import network.transformer.utils as utils
+import network.transformer.layer as layer

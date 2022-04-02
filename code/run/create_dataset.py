@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-file : main.py
+file : create_dataset.py
 created time : 2022/03/29
 author : Zhenyu Wei
 version : 1.0
@@ -10,9 +10,7 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
 import os
-import multiprocessing as mp
-from directory_creator import DirectoryCreator
-from dataset_creator import DatasetCreator
+from network.dataset import *
 
 if __name__ == '__main__':
     cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -24,13 +22,13 @@ if __name__ == '__main__':
     # Directory
     if is_create_directory:
         data_dir = os.path.join(os.path.join(cur_dir, './data/'))
-        out_dir = os.path.join(os.path.join(cur_dir, '../out/model/'))
+        out_dir = os.path.join(os.path.join(cur_dir, './out/model/'))
         directory_creator = DirectoryCreator(
             os.path.join(data_dir, 'top_all36_prot.rtf')
         )
         directory_creator.create_directory(os.path.join(out_dir, 'directory.txt'))
     # Dataset:
-    directory_dir = os.path.join(cur_dir, '../out/model')
+    directory_dir = os.path.join(cur_dir, './out/model')
     out_dir = '/home/zhenyuwei/Documents/solvated_protein_dataset'
     dataset_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset'
     dataset_str_dir = os.path.join(dataset_dir, 'str')

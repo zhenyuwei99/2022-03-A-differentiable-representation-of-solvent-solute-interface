@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-file : transformer.py
+file : layer.py
 created time : 2022/03/30
 author : Zhenyu Wei
 version : 1.0
@@ -11,7 +11,8 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 
 import torch
 import torch.nn as nn
-from utils import *
+from network import DATA_TYPE, DEVICE, DIM_COORDINATE
+from network.transformer.utils import *
 
 # Encoder Layer
 class EncoderLayer(nn.Module):

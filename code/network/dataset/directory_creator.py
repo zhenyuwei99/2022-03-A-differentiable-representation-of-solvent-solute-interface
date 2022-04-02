@@ -9,7 +9,6 @@ contact : zhenyuwei99@gmail.com
 copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
-import os
 from typing import IO
 
 class DirectoryCreator:
