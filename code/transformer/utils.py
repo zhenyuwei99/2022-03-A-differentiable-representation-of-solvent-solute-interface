@@ -12,7 +12,7 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 import torch
 import torch.nn as nn
 
-DEVICE = torch.device('cpu')
+DEVICE = torch.device('cuda')
 DATA_TYPE = torch.float32
 DIM_COORDINATE = 3
 
@@ -31,19 +31,19 @@ class PositionEncoding(nn.Module):
     def __init__(self, dim_model, dropout=0.1, max_length=10000) -> None:
         super().__init__()
         self._dropout = nn.Dropout(p=dropout)
-        self._encoding = torch.zeros(max_length, dim_model, dtype=DATA_TYPE, device=DEVICE)
+        self._encoding = torch.zeros(max_length, dim_model).to(DATA_TYPE).to(DEVICE)
         # Do not upgrade during optimization
         self._encoding.requires_grad = False
 
-        pos = torch.arange(0, max_length, dtype=DATA_TYPE, device=DEVICE)
+        pos = torch.arange(0, max_length).to(DATA_TYPE).to(DEVICE)
         pos = pos.float().unsqueeze(dim=1) # [max_length x 1]
         if dim_model % 2 != 0:
-            nominator = torch.arange(0, dim_model+1, step=2, dtype=DATA_TYPE, device=DEVICE)
+            nominator = torch.arange(0, dim_model+1, step=2).to(DATA_TYPE).to(DEVICE)
             self._encoding[:, 0::2] = torch.sin(pos / (10000 ** (nominator / dim_model)))
-            nominator = torch.arange(0, dim_model-1, step=2, dtype=DATA_TYPE, device=DEVICE)
+            nominator = torch.arange(0, dim_model-1, step=2).to(DATA_TYPE).to(DEVICE)
             self._encoding[:, 1::2] = torch.cos(pos / (10000 ** (nominator / dim_model)))
         else:
-            nominator = torch.arange(0, dim_model, step=2, dtype=DATA_TYPE, device=DEVICE)
+            nominator = torch.arange(0, dim_model, step=2).to(DATA_TYPE).to(DEVICE)
             self._encoding[:, 0::2] = torch.sin(pos / (10000 ** (nominator / dim_model)))
             self._encoding[:, 1::2] = torch.cos(pos / (10000 ** (nominator / dim_model)))
 
@@ -74,7 +74,7 @@ class ScaledDotProductAttention(nn.Module):
         - num_heads * dim_v = d_model
         '''
         # scores : [batch_size, num_heads, len_q, len_k]
-        dim_k = torch.tensor(K.size()[-1], dtype=DATA_TYPE)
+        dim_k = torch.tensor(K.size()[-1]).to(DATA_TYPE)
         scores = torch.matmul(Q, K.transpose(-1, -2)) / torch.sqrt(dim_k)
         # attention : [batch_size, num_heads, len_q, len_k]
         attention = nn.Softmax(dim=-1)(scores)
@@ -91,11 +91,11 @@ class MultiHeadAttention(nn.Module):
         self._dim_k = dim_k
         self._dim_v = self._dim_model // num_heads
         self._num_heads = num_heads
-        self.W_Q = nn.Linear(self._dim_model, self._dim_k * self._num_heads, bias=False, device=DEVICE, dtype=DATA_TYPE)
-        self.W_K = nn.Linear(self._dim_model, self._dim_k * self._num_heads, bias=False, device=DEVICE, dtype=DATA_TYPE)
-        self.W_V = nn.Linear(self._dim_model, self._dim_v * self._num_heads, bias=False, device=DEVICE, dtype=DATA_TYPE)
-        self.layer_norm = nn.LayerNorm(self._dim_model, device=DEVICE, dtype=DATA_TYPE)
-        self.scaled_dot_product_attention = ScaledDotProductAttention()
+        self.W_Q = nn.Linear(self._dim_model, self._dim_k * self._num_heads, bias=False).to(DATA_TYPE).to(DEVICE)
+        self.W_K = nn.Linear(self._dim_model, self._dim_k * self._num_heads, bias=False).to(DATA_TYPE).to(DEVICE)
+        self.W_V = nn.Linear(self._dim_model, self._dim_v * self._num_heads, bias=False).to(DATA_TYPE).to(DEVICE)
+        self.layer_norm = nn.LayerNorm(self._dim_model).to(DATA_TYPE).to(DEVICE)
+        self.scaled_dot_product_attention = ScaledDotProductAttention().to(DEVICE)
 
     def forward(self, input_Q: torch.Tensor, input_K: torch.Tensor, input_V: torch.Tensor):
         '''
@@ -128,11 +128,11 @@ class PoswiseFeedForwardNet(nn.Module):
         self._dim_model = dim_model
         self._dim_ff = dim_ff
         self.ffn = nn.Sequential(
-            nn.Linear(self._dim_model, self._dim_ff, bias=False, dtype=DATA_TYPE),
+            nn.Linear(self._dim_model, self._dim_ff, bias=False).to(DATA_TYPE),
             nn.ReLU(),
-            nn.Linear(self._dim_ff, self._dim_model, bias=False, dtype=DATA_TYPE)
+            nn.Linear(self._dim_ff, self._dim_model, bias=False).to(DATA_TYPE)
         ).to(DEVICE)
-        self.layer_norm = nn.LayerNorm(self._dim_model, device=DEVICE, dtype=DATA_TYPE)
+        self.layer_norm = nn.LayerNorm(self._dim_model).to(DATA_TYPE).to(DEVICE)
 
     def forward(self, inputs: torch.Tensor):
         '''

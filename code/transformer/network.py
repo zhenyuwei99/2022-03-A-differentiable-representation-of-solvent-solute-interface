@@ -10,9 +10,7 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
 import torch
-import numpy as np
 import torch.nn as nn
-import torch.optim as optim
 from utils import *
 
 # Encoder Layer
@@ -59,8 +57,8 @@ class Encoder(nn.Module):
         self._dropout = dropout
         self._max_sequence_length = max_sequence_length
         self.sequence_embeding = nn.Embedding(
-            self._directory_size, self._dim_model_embeding, padding_idx=0, device=DEVICE
-        )
+            self._directory_size, self._dim_model_embeding, padding_idx=0
+        ).to(DEVICE)
         self.position_encoding = PositionEncoding(
             self._dim_model_embeding, dropout=self._dropout,
             max_length=self._max_sequence_length
@@ -123,7 +121,7 @@ class Decoder(nn.Module):
         self._directory_size = directory_size
         self._num_layers = num_layers
         self._num_heads = num_heads
-        self.W_Input = nn.Linear(DIM_COORDINATE, self._dim_model, bias=False, dtype=DATA_TYPE, device=DEVICE)
+        self.W_Input = nn.Linear(DIM_COORDINATE, self._dim_model, bias=False).to(DATA_TYPE).to(DEVICE)
         self.layers = nn.ModuleList([
             DecoderLayer(
                 self._dim_model, self._dim_k, self._dim_ffn, self._num_heads
@@ -178,9 +176,9 @@ class Transformer(nn.Module):
             num_heads=self._num_heads
         )
         self.ffn = nn.Sequential(
-            nn.Linear(dim_model, self._dim_ffn, dtype=DATA_TYPE),
+            nn.Linear(dim_model, self._dim_ffn).to(DATA_TYPE),
             nn.ReLU(),
-            nn.Linear(self._dim_ffn, 1, dtype=DATA_TYPE),
+            nn.Linear(self._dim_ffn, 1).to(DATA_TYPE),
             nn.Sigmoid()
         ).to(DEVICE)
 
