@@ -14,22 +14,26 @@ import datetime
 import numpy as np
 import h5py
 import torch
+import torch.optim as optim
 import torch.utils.data as data
 from dataset import *
 from utils import *
 from network import *
-
+torch.cuda.set_per_process_memory_fraction(1., 0)
 # Model Hyperparameters
-dim_model = 64
+dim_model = 32
 dim_ffn = 256
 dim_k = dim_v = 32
-num_layers = 3
-num_heads = 8
+num_layers = 6
+num_heads = 2
 # Traning Hyperparameters
-is_training_restart = True
-num_epochs = 10
+is_training_restart = not True
+batch_size = 1
+max_num_samples = 1000
+num_epochs = 100
 num_proteins_per_epoch = 5000
 save_interval = 100
+log_interval = 50
 # Dirs
 dataset_dir = '/home/zhenyuwei/Documents/solvated_protein_dataset'
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -72,27 +76,33 @@ if __name__ == '__main__':
         with open(log_file, 'a') as f:
             print('Restart training at %s' %datetime.datetime.now().replace(microsecond=0), file=f)
         model = load_model(model_file)
+    model.to(DEVICE)
     model.train()
     # Dataset and dataloader
     dataset = SolvatedProteinDataset(dataset_file)
     sampler = data.SubsetRandomSampler(
         np.random.randint(0, len(dataset), size=num_proteins_per_epoch)
     )
-    loader = data.DataLoader(dataset, batch_size=2, sampler=sampler, collate_fn=Collect(0))
+    loader = data.DataLoader(dataset, batch_size=batch_size, sampler=sampler, collate_fn=Collect(max_num_samples))
     # Train
     criterion = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=1e-3, momentum=0.99, weight_decay=0.001)
+    # criterion = nn.CrossEntropyLoss(reduction='sum')
+    optimizer = optim.Adam(model.parameters(), lr=1e-5, weight_decay=0.0001)
+    # optimizer = optim.SGD(model.parameters(), lr=1e-5, momentum=0.99, weight_decay=0.001)
     iteration = 0
     for epoch in range(num_epochs):
         for sequence_coordinate, sequence_label, coordinate, label in loader:
             # output: [Batch_size, num_samples]
             output = model(sequence_coordinate, sequence_label, coordinate)
+            if batch_size == 1:
+                output = output.unsqueeze(0)
             loss = criterion(output.float(), label.float())
-            with open(log_file, 'a') as f:
-                print(
-                    'Epoch %02d, Iteration %06d' %(epoch+1, iteration+1),
-                    'loss =', '{:.6f}'.format(loss), file=f
-                )
+            if iteration % log_interval == 0:
+                with open(log_file, 'a') as f:
+                    print(
+                        'Epoch %02d, Iteration %06d' %(epoch+1, iteration+1),
+                        'loss =', '{:.6f}'.format(loss), file=f
+                    )
             if iteration % save_interval == 0:
                 save_model(model, model_file)
             optimizer.zero_grad()
