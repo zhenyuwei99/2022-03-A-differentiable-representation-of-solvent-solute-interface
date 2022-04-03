@@ -16,18 +16,19 @@ from run import *
 
 if __name__ == '__main__':
     # Hyperparameter
-    num_test_samples = 20
+    num_test_proteins = 20
+    num_test_samples = 50
     # Read data
-    with h5py.File(train_dataset_file, 'r') as f:
+    with h5py.File(test_dataset_file, 'r') as f:
         max_sequence_length = f['info/max_sequence_length'][()]
     # Initialization
     model = load_model(model_file, max_sequence_length)
     model.to(device)
     model.eval()
     # Dataset and dataloader
-    dataset = SolvatedProteinDataset(train_dataset_file)
+    dataset = SolvatedProteinDataset(test_dataset_file)
     sampler = data.SubsetRandomSampler(
-        np.random.randint(0, len(dataset), size=50)
+        np.random.randint(0, len(dataset), size=num_test_proteins)
     )
     loader = data.DataLoader(
         dataset, batch_size=batch_size, sampler=sampler,
@@ -40,5 +41,5 @@ if __name__ == '__main__':
             if batch_size == 1:
                 output = output.unsqueeze(0)
             num_total_samples += output.numel()
-            num_correct_samples += torch.count_nonzero((output - label)**2 <= 0.1)
+            num_correct_samples += torch.count_nonzero((output - label)**2 <= 0.25)
         print('Accuracy: %.2f %%' %(num_correct_samples/num_total_samples*100))
