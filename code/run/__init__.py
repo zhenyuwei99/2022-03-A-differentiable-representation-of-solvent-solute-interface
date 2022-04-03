@@ -20,14 +20,14 @@ dim_model = 32
 dim_ffn = 256
 dim_k = dim_v = 32
 num_layers = 6
-num_heads = 2
+num_heads = 4
 # Traning Hyperparameters
 is_training_restart = not True
 batch_size = 1
-max_num_samples = 1000
-num_epochs = 100
+max_num_samples = 750
+num_epochs = 500
 num_proteins_per_epoch = 5000
-learning_rate = 1e-4
+learning_rate = 1e-5
 dropout_prob = 0.1
 weight_decay = 0
 save_interval = 100
