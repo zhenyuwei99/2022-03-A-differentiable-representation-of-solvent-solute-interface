@@ -17,7 +17,7 @@ from run import *
 if __name__ == '__main__':
     # Read data
     with h5py.File(train_dataset_file, 'r') as f:
-            max_sequence_length = f['info/max_sequence_length'][()]
+        max_sequence_length = f['info/max_sequence_length'][()]
     # Initialization
     model = load_model(model_file, max_sequence_length)
     model.to(DEVICE)
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     sampler = data.SubsetRandomSampler(
         np.random.randint(0, len(dataset), size=50)
     )
-    loader = data.DataLoader(dataset, batch_size=batch_size, sampler=sampler, collate_fn=Collect(100))
+    loader = data.DataLoader(dataset, batch_size=batch_size, sampler=sampler, collate_fn=Collect(20))
     num_total_samples, num_correct_samples = 0, 0
     with torch.no_grad():
         for sequence_coordinate, sequence_label, coordinate, label in loader:
