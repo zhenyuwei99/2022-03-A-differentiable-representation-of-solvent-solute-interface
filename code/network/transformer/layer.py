@@ -72,8 +72,7 @@ class Encoder(nn.Module):
             self._directory_size, self._dim_model_embeding, padding_idx=0
         ).to(self._device)
         self.position_encoding = PositionEncoding(
-            self._dim_model_embeding,
-            self._dropout, self._max_sequence_length,
+            self._dim_model_embeding, self._max_sequence_length,
             self._data_type, self._device
         )
         self.layers = nn.ModuleList([

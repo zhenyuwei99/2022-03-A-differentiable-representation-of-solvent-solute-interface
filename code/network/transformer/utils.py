@@ -25,7 +25,7 @@ def parse_directory(directory_file: str):
 # Position encoding
 class PositionEncoding(nn.Module):
     def __init__(
-        self, dim_model, dropout, max_length,
+        self, dim_model, max_length,
         data_type, device
     ) -> None:
         super().__init__()
@@ -33,7 +33,6 @@ class PositionEncoding(nn.Module):
         self._data_type = data_type
         self._device = device
         # Layer
-        self._dropout = nn.Dropout(p=dropout)
         self._encoding = torch.zeros(max_length, dim_model).to(self._data_type).to(self._device)
         # Do not upgrade during optimization
         self._encoding.requires_grad = False
@@ -56,7 +55,7 @@ class PositionEncoding(nn.Module):
         '''
         output = x + self._encoding[:x.size(1)]
         output.masked_fill_(x==0, 0)
-        return self._dropout(output)
+        return output
 
 # Padding mask
 
