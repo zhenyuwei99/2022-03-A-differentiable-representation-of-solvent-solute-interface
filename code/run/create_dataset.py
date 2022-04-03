@@ -21,7 +21,7 @@ if __name__ == '__main__':
     is_restart_train_dataset = not True
     # Directory
     if is_create_directory:
-        data_dir = os.path.join(os.path.join(cur_dir, './data/'))
+        data_dir = os.path.join(os.path.join(cur_dir, '../data/'))
         out_dir = os.path.join(os.path.join(cur_dir, './out/model/'))
         directory_creator = DirectoryCreator(
             os.path.join(data_dir, 'top_all36_prot.rtf')
