@@ -24,9 +24,8 @@ num_heads = 4
 # Traning Hyperparameters
 is_training_restart = not True
 batch_size = 1
-max_num_samples = 250
+max_num_samples = 1000
 num_epochs = 500
-num_proteins_per_epoch = 5000
 learning_rate = 1e-5
 dropout_prob = 0.1
 weight_decay = 0
@@ -52,13 +51,12 @@ training_info =  '''
 batch_size = %d
 max_num_samples = %d
 num_epochs = %d
-num_proteins_per_epoch = %d
 learning_rate = %1e
 dropout_prob = %.2f
 weight_decay = %.2f
 ```
 ''' %(
-    batch_size, max_num_samples, num_epochs, num_proteins_per_epoch,
+    batch_size, max_num_samples, num_epochs,
     learning_rate, dropout_prob, weight_decay
 )
 
