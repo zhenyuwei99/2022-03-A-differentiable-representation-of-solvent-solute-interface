@@ -15,19 +15,24 @@ import torch.utils.data as data
 from run import *
 
 if __name__ == '__main__':
+    # Hyperparameter
+    num_test_samples = 20
     # Read data
     with h5py.File(train_dataset_file, 'r') as f:
         max_sequence_length = f['info/max_sequence_length'][()]
     # Initialization
     model = load_model(model_file, max_sequence_length)
-    model.to(DEVICE)
+    model.to(device)
     model.eval()
     # Dataset and dataloader
     dataset = SolvatedProteinDataset(train_dataset_file)
     sampler = data.SubsetRandomSampler(
         np.random.randint(0, len(dataset), size=50)
     )
-    loader = data.DataLoader(dataset, batch_size=batch_size, sampler=sampler, collate_fn=Collect(20))
+    loader = data.DataLoader(
+        dataset, batch_size=batch_size, sampler=sampler,
+        collate_fn=Collect(num_test_samples, data_type, device)
+    )
     num_total_samples, num_correct_samples = 0, 0
     with torch.no_grad():
         for sequence_coordinate, sequence_label, coordinate, label in loader:
