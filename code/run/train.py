@@ -10,7 +10,6 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
 import datetime
-import numpy as np
 import h5py
 import torch.optim as optim
 import torch.utils.data as data
@@ -36,18 +35,19 @@ if __name__ == '__main__':
     model.train()
     # Dataset and dataloader
     dataset = SolvatedProteinDataset(train_dataset_file)
-    sampler = data.SubsetRandomSampler(
-        np.random.randint(0, len(dataset), size=num_proteins_per_epoch)
-    )
+    # sampler = data.SubsetRandomSampler(
+    #     np.random.randint(0, len(dataset), size=len(dataset))
+    # )
     loader = data.DataLoader(
-        dataset, batch_size=batch_size, sampler=sampler,
+        dataset, batch_size=batch_size, shuffle=True,
         collate_fn=Collect(max_num_samples, data_type, device)
     )
     # Train
     criterion = nn.MSELoss()
-    # criterion = nn.CrossEntropyLoss(reduction='sum')
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    # optimizer = optim.SGD(model.parameters(), lr=1e-5, momentum=0.99, weight_decay=0.001)
+    optimizer = optim.Adam(
+        model.parameters(), lr=learning_rate,
+        betas=(0.9, 0.98), eps=1e-08, weight_decay=weight_decay
+    )
     iteration = 0
     for epoch in range(num_epochs):
         for sequence_coordinate, sequence_label, coordinate, label in loader:
