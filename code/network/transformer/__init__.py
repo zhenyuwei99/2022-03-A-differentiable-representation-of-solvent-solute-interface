@@ -4,6 +4,14 @@ __email__ = "zhenyuwei99@gmail.com"
 __copyright__ = "Copyright 2021-2021, Southeast University and Zhenyu Wei"
 __license__ = "MIT"
 
-import network.transformer.dataset as dataset
-import network.transformer.utils as utils
-import network.transformer.layer as layer
+from network.transformer.dataset import SolvatedProteinDataset, Collect
+from network.transformer.utils import PositionEncoding, MultiHeadAttention
+from network.transformer.layer import Encoder, EncoderLayer, Decoder, DecoderLayer, Transformer
+
+__all__ = [
+    'SolvatedProteinDataset', 'Collect',
+    'PositionEncoding', 'MultiHeadAttention',
+    'Encoder', 'EncoderLayer',
+    'Decoder', 'DecoderLayer',
+    'Transformer'
+]

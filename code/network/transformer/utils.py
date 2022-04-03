@@ -11,7 +11,6 @@ copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 
 import torch
 import torch.nn as nn
-from network import DATA_TYPE, DEVICE
 
 # Parse directory file
 def parse_directory(directory_file: str):
@@ -25,22 +24,29 @@ def parse_directory(directory_file: str):
 
 # Position encoding
 class PositionEncoding(nn.Module):
-    def __init__(self, dim_model, dropout=0.1, max_length=10000) -> None:
+    def __init__(
+        self, dim_model, dropout, max_length,
+        data_type, device
+    ) -> None:
         super().__init__()
+        # Input
+        self._data_type = data_type
+        self._device = device
+        # Layer
         self._dropout = nn.Dropout(p=dropout)
-        self._encoding = torch.zeros(max_length, dim_model).to(DATA_TYPE).to(DEVICE)
+        self._encoding = torch.zeros(max_length, dim_model).to(self._data_type).to(self._device)
         # Do not upgrade during optimization
         self._encoding.requires_grad = False
 
-        pos = torch.arange(0, max_length).to(DATA_TYPE).to(DEVICE)
+        pos = torch.arange(0, max_length).to(self._data_type).to(self._device)
         pos = pos.float().unsqueeze(dim=1) # [max_length x 1]
         if dim_model % 2 != 0:
-            nominator = torch.arange(0, dim_model+1, step=2).to(DATA_TYPE).to(DEVICE)
+            nominator = torch.arange(0, dim_model+1, step=2).to(self._data_type).to(self._device)
             self._encoding[:, 0::2] = torch.sin(pos / (10000 ** (nominator / dim_model)))
-            nominator = torch.arange(0, dim_model-1, step=2).to(DATA_TYPE).to(DEVICE)
+            nominator = torch.arange(0, dim_model-1, step=2).to(self._data_type).to(self._device)
             self._encoding[:, 1::2] = torch.cos(pos / (10000 ** (nominator / dim_model)))
         else:
-            nominator = torch.arange(0, dim_model, step=2).to(DATA_TYPE).to(DEVICE)
+            nominator = torch.arange(0, dim_model, step=2).to(self._data_type).to(self._device)
             self._encoding[:, 0::2] = torch.sin(pos / (10000 ** (nominator / dim_model)))
             self._encoding[:, 1::2] = torch.cos(pos / (10000 ** (nominator / dim_model)))
 
@@ -56,8 +62,10 @@ class PositionEncoding(nn.Module):
 
 # ScaledDotProductAttention
 class ScaledDotProductAttention(nn.Module):
-    def __init__(self) -> None:
+    def __init__(self, data_type, device) -> None:
         super().__init__()
+        self._data_type = data_type
+        self._device = device
 
     def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor):
         '''
@@ -71,7 +79,7 @@ class ScaledDotProductAttention(nn.Module):
         - num_heads * dim_v = d_model
         '''
         # scores : [batch_size, num_heads, len_q, len_k]
-        dim_k = torch.tensor(K.size()[-1]).to(DATA_TYPE)
+        dim_k = torch.tensor(K.size()[-1]).to(self._data_type)
         scores = torch.matmul(Q, K.transpose(-1, -2)) / torch.sqrt(dim_k)
         # attention : [batch_size, num_heads, len_q, len_k]
         attention = nn.Softmax(dim=-1)(scores)
@@ -80,19 +88,29 @@ class ScaledDotProductAttention(nn.Module):
         return context
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, dim_model, dim_k, num_heads) -> None:
+    def __init__(self, dim_model, dim_k, num_heads, data_type, device) -> None:
         super().__init__()
+        # Input
         if dim_model % num_heads != 0:
             raise KeyError('dim_model is not proportional to the num_heads')
         self._dim_model = dim_model
         self._dim_k = dim_k
         self._dim_v = self._dim_model // num_heads
         self._num_heads = num_heads
-        self.W_Q = nn.Linear(self._dim_model, self._dim_k * self._num_heads, bias=False).to(DATA_TYPE).to(DEVICE)
-        self.W_K = nn.Linear(self._dim_model, self._dim_k * self._num_heads, bias=False).to(DATA_TYPE).to(DEVICE)
-        self.W_V = nn.Linear(self._dim_model, self._dim_v * self._num_heads, bias=False).to(DATA_TYPE).to(DEVICE)
-        self.layer_norm = nn.LayerNorm(self._dim_model).to(DATA_TYPE).to(DEVICE)
-        self.scaled_dot_product_attention = ScaledDotProductAttention().to(DEVICE)
+        self._data_type = data_type
+        self._device = device
+        # Layer
+        self.W_Q = nn.Linear(
+            self._dim_model, self._dim_k * self._num_heads, bias=False
+        ).to(self._data_type).to(self._device)
+        self.W_K = nn.Linear(
+            self._dim_model, self._dim_k * self._num_heads, bias=False
+        ).to(self._data_type).to(self._device)
+        self.W_V = nn.Linear(
+            self._dim_model, self._dim_v * self._num_heads, bias=False
+        ).to(self._data_type).to(self._device)
+        self.layer_norm = nn.LayerNorm(self._dim_model).to(self._data_type).to(self._device)
+        self.scaled_dot_product_attention = ScaledDotProductAttention(self._data_type, self._device)
 
     def forward(self, input_Q: torch.Tensor, input_K: torch.Tensor, input_V: torch.Tensor):
         '''
@@ -120,16 +138,20 @@ class MultiHeadAttention(nn.Module):
 
 # Position-wise fully connected feed-forward network
 class PoswiseFeedForwardNet(nn.Module):
-    def __init__(self, dim_model, dim_ff) -> None:
+    def __init__(self, dim_model, dim_ff, data_type, device) -> None:
         super().__init__()
+        # Input
         self._dim_model = dim_model
         self._dim_ff = dim_ff
+        self._data_type = data_type
+        self._device = device
+        # Layer
         self.ffn = nn.Sequential(
-            nn.Linear(self._dim_model, self._dim_ff, bias=False).to(DATA_TYPE),
+            nn.Linear(self._dim_model, self._dim_ff, bias=False).to(self._data_type),
             nn.ReLU(),
-            nn.Linear(self._dim_ff, self._dim_model, bias=False).to(DATA_TYPE)
-        ).to(DEVICE)
-        self.layer_norm = nn.LayerNorm(self._dim_model).to(DATA_TYPE).to(DEVICE)
+            nn.Linear(self._dim_ff, self._dim_model, bias=False).to(self._data_type)
+        ).to(self._device)
+        self.layer_norm = nn.LayerNorm(self._dim_model).to(self._data_type).to(self._device)
 
     def forward(self, inputs: torch.Tensor):
         '''
