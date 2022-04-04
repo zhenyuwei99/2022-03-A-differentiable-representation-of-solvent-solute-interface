@@ -13,6 +13,7 @@ import datetime
 import h5py
 import torch.optim as optim
 import torch.utils.data as data
+from network import NUM_FRAMES_PER_PROTEIN
 from run import *
 
 if __name__ == '__main__':
@@ -26,6 +27,9 @@ if __name__ == '__main__':
             print('# Start training at %s' %datetime.datetime.now().replace(microsecond=0), file=f)
             print(training_info, file=f)
         model = init_model(max_sequence_length)
+        for m in model.modules():
+            if isinstance(m, (torch.nn.Linear)):
+                torch.nn.init.xavier_uniform_(m.weight)
     else:
         with open(log_file, 'a') as f:
             print('# Restart training at %s' %datetime.datetime.now().replace(microsecond=0), file=f)
@@ -35,19 +39,20 @@ if __name__ == '__main__':
     model.train()
     # Dataset and dataloader
     dataset = SolvatedProteinDataset(train_dataset_file)
-    # sampler = data.SubsetRandomSampler(
-    #     np.random.randint(0, len(dataset), size=len(dataset))
-    # )
+    num_proteins = len(dataset)//NUM_FRAMES_PER_PROTEIN
+    indices = (
+        np.arange(0, num_proteins) * NUM_FRAMES_PER_PROTEIN +
+        np.random.randint(0, NUM_FRAMES_PER_PROTEIN, size=(num_proteins))
+    )
+    np.random.shuffle(indices)
+    sampler = data.SubsetRandomSampler(indices)
     loader = data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=True,
+        dataset, batch_size=batch_size, sampler=sampler,
         collate_fn=Collect(max_num_samples, data_type, device)
     )
     # Train
     criterion = nn.MSELoss()
-    # optimizer = optim.Adam(
-    #     model.parameters(), lr=learning_rate,
-    #     betas=(0.9, 0.98), eps=1e-08, weight_decay=weight_decay
-    # )
+    # optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.99)
     iteration = 0
     for epoch in range(num_epochs):
