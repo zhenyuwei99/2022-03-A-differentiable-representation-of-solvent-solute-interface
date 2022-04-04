@@ -33,6 +33,7 @@ class PositionEncoding(nn.Module):
         self._data_type = data_type
         self._device = device
         # Layer
+        self.dropout = nn.Dropout(p=0.1)
         self._encoding = torch.zeros(max_length, dim_model).to(self._data_type).to(self._device)
         # Do not upgrade during optimization
         self._encoding.requires_grad = False
@@ -55,9 +56,8 @@ class PositionEncoding(nn.Module):
         '''
         output = x + self._encoding[:x.size(1)]
         output.masked_fill_(x==0, 0)
-        return output
-
-# Padding mask
+        # return output
+        return self.dropout(output)
 
 # ScaledDotProductAttention
 class ScaledDotProductAttention(nn.Module):
@@ -136,9 +136,9 @@ class MultiHeadAttention(nn.Module):
         # context: [batch_size, len_q, n_heads * dim_v = dim_model]
         context = context.transpose(1, 2).reshape(batch_size, -1, self._num_heads * self._dim_v)
         # Dropout before add
-        context = self.dropout(context)
+        context = context
         # Dropout after add
-        return self.dropout(self.layer_norm(context + residual))
+        return self.layer_norm(context + residual)
 
 # Position-wise fully connected feed-forward network
 class PoswiseFeedForwardNet(nn.Module):
