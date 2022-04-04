@@ -18,18 +18,18 @@ dataset_dir = '/home/zhenyuwei/Documents/solvated_protein_dataset'
 # Model Hyperparameters
 dim_model = 32
 dim_ffn = 256
-dim_k = dim_v = 32
+dim_k = dim_v = 64
 num_layers = 6
-num_heads = 4
+num_heads = 2
 # Traning Hyperparameters
 is_training_restart = not True
-batch_size = 1
+batch_size = 2
 max_num_samples = 1000
 num_epochs = 500
-learning_rate = 1e-5
+learning_rate = 5e-6
 dropout_prob = 0
 weight_decay = 0
-save_interval = 100
+save_interval = 500
 log_interval = 50
 # Other hyperparameters
 device = torch.device('cuda')
