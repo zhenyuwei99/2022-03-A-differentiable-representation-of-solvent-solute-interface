@@ -15,9 +15,11 @@ import torch.utils.data as data
 from run import *
 
 if __name__ == '__main__':
+    # out_dir = '/home/zhenyuwei/nutstore/ZhenyuWei/Paper/2022-03-A-differentiable-representation-of-solvent-solute-interface/code/run/out/bak/03-larger-ffn'
+    model_file = os.path.join(out_dir, 'model.pt')
     # Hyperparameter
-    num_test_proteins = 20
-    num_test_samples = 50
+    num_test_proteins = 50
+    num_test_samples = 20
     # Read data
     with h5py.File(test_dataset_file, 'r') as f:
         max_sequence_length = f['info/max_sequence_length'][()]
@@ -31,7 +33,7 @@ if __name__ == '__main__':
         np.random.randint(0, len(dataset), size=num_test_proteins)
     )
     loader = data.DataLoader(
-        dataset, batch_size=batch_size, sampler=sampler,
+        dataset, batch_size=1, sampler=sampler,
         collate_fn=Collect(num_test_samples, data_type, device)
     )
     num_total_samples, num_correct_samples = 0, 0
@@ -42,4 +44,4 @@ if __name__ == '__main__':
                 output = output.unsqueeze(0)
             num_total_samples += output.numel()
             num_correct_samples += torch.count_nonzero((output - label)**2 <= 0.25)
-        print('Accuracy: %.2f %%' %(num_correct_samples/num_total_samples*100))
+            print('Total Samples: %d, Accuracy: %.2f %%' %(num_total_samples, num_correct_samples/num_total_samples*100))
