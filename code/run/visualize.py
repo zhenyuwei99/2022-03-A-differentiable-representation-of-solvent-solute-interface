@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # Dataset and dataloader
     dataset = SolvatedProteinDataset(test_dataset_file, is_return_key=True)
     # Predict
-    for index in np.random.randint(0, len(dataset), 200):
+    for index in np.random.randint(0, len(dataset), 1):
         key = dataset[index][0]
         sequence = torch.tensor(dataset[index][1]).to(DATA_TYPE).to(DEVICE)
         sequence_coordinate, sequence_label = sequence[:, :3], sequence[:, 3].int()
