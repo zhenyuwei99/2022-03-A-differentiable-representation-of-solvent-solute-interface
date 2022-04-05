@@ -19,6 +19,7 @@ if __name__ == '__main__':
     with h5py.File(train_dataset_file, 'r') as f:
         max_sequence_length = f['info/max_sequence_length'][()]
     # Initialization
-    model_file = os.path.join(bak_dir, '06-larger-batch-size-less-layer', 'model.pt')
+    model_file = os.path.join(bak_dir, '08-smaller-dim-model', 'model.pt')
     model = load_model(model_file, max_sequence_length=max_sequence_length)
+    # model = init_model(1000)
     print('parameters_count:',count_parameters(model))

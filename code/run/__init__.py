@@ -16,13 +16,13 @@ torch.cuda.set_per_process_memory_fraction(1., 0)
 # Dir Hyperparameters
 dataset_dir = '/home/zhenyuwei/Documents/solvated_protein_dataset'
 # Model Hyperparameters
-dim_model = 32
+dim_model = 16
 dim_ffn = 256
 dim_k = dim_v = 32
 num_layers = 3
-num_heads = 4
+num_heads = 8
 # Traning Hyperparameters
-is_training_restart = not True
+is_training_restart = True
 batch_size = 2
 max_num_samples = 1000
 num_epochs = 500

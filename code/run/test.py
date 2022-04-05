@@ -15,7 +15,7 @@ import torch.utils.data as data
 from run import *
 
 if __name__ == '__main__':
-    model_file = os.path.join(bak_dir, '06-larger-batch-size-less-layer', 'model.pt')
+    model_file = os.path.join(bak_dir, '08-smaller-dim-model', 'model.pt')
     # Hyperparameter
     num_test_proteins = 50
     num_test_samples = 200
@@ -42,5 +42,5 @@ if __name__ == '__main__':
             if batch_size == 1:
                 output = output.unsqueeze(0)
             num_total_samples += output.numel()
-            num_correct_samples += torch.count_nonzero(torch.abs(output - label) <= 0.1)
+            num_correct_samples += torch.count_nonzero(torch.abs(output - label) <= 0.5)
             print('Total Samples: %d, Accuracy: %.2f %%' %(num_total_samples, num_correct_samples/num_total_samples*100))

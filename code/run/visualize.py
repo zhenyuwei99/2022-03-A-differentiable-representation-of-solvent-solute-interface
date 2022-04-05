@@ -35,7 +35,7 @@ def generate_tcl_text(key):
 
 if __name__ == '__main__':
     # Dir
-    model_file = os.path.join(bak_dir, '06-larger-batch-size-less-layer', 'model.pt')
+    model_file = os.path.join(bak_dir, '06-less-layer', 'model.pt')
     out_dir = os.path.join(cur_dir, './out/image')
     pdb_dir = '/home/zhenyuwei/solvated-protein-data-set/solvated-protein-data-set/modified_data/test'
     # pdb_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset/test'
