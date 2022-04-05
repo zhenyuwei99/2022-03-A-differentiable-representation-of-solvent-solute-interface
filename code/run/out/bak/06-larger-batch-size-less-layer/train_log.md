@@ -1,0 +1,437 @@
+# Network hyperparmeters
+```python
+dim_model = 32
+dim_ffn = 256
+dim_k = dim_v = 32
+num_layers = 3
+num_heads = 4
+```
+
+# Start training at 2022-04-05 10:58:45
+
+```python
+batch_size = 6
+max_num_samples = 1000
+num_epochs = 500
+learning_rate = 1.00e-03
+dropout_prob = 0.00000
+weight_decay = 0.00000
+```
+
+- Epoch 01, Iteration 000001, Loss 0.267990
+- Epoch 01, Iteration 000051, Loss 0.135122
+- Epoch 01, Iteration 000101, Loss 0.129502
+- Epoch 01, Iteration 000151, Loss 0.119010
+- Epoch 01, Iteration 000201, Loss 0.096531
+- Epoch 01, Iteration 000251, Loss 0.100844
+- Epoch 01, Iteration 000301, Loss 0.103480
+- Epoch 01, Iteration 000351, Loss 0.091807
+- Epoch 01, Iteration 000401, Loss 0.095721
+- Epoch 01, Iteration 000451, Loss 0.089567
+- Epoch 01, Iteration 000501, Loss 0.085563
+- Epoch 01, Iteration 000551, Loss 0.087096
+- Epoch 01, Iteration 000601, Loss 0.066718
+- Epoch 01, Iteration 000651, Loss 0.089660
+- Epoch 01, Iteration 000701, Loss 0.069056
+- Epoch 01, Iteration 000751, Loss 0.078017
+- Epoch 01, Iteration 000801, Loss 0.068164
+- Epoch 01, Iteration 000851, Loss 0.077584
+- Epoch 01, Iteration 000901, Loss 0.067751
+- Epoch 01, Iteration 000951, Loss 0.084274
+- Epoch 01, Iteration 001001, Loss 0.073612
+- Epoch 01, Iteration 001051, Loss 0.057481
+- Epoch 02, Iteration 001101, Loss 0.058761
+- Epoch 02, Iteration 001151, Loss 0.064059
+- Epoch 02, Iteration 001201, Loss 0.056628
+- Epoch 02, Iteration 001251, Loss 0.048408
+- Epoch 02, Iteration 001301, Loss 0.062767
+- Epoch 02, Iteration 001351, Loss 0.047599
+- Epoch 02, Iteration 001401, Loss 0.051960
+- Epoch 02, Iteration 001451, Loss 0.055672
+- Epoch 02, Iteration 001501, Loss 0.058680
+- Epoch 02, Iteration 001551, Loss 0.058549
+- Epoch 02, Iteration 001601, Loss 0.059003
+- Epoch 02, Iteration 001651, Loss 0.065485
+- Epoch 02, Iteration 001701, Loss 0.063038
+- Epoch 02, Iteration 001751, Loss 0.050162
+- Epoch 02, Iteration 001801, Loss 0.053749
+- Epoch 02, Iteration 001851, Loss 0.046350
+- Epoch 02, Iteration 001901, Loss 0.061402
+- Epoch 02, Iteration 001951, Loss 0.051101
+- Epoch 02, Iteration 002001, Loss 0.049389
+- Epoch 02, Iteration 002051, Loss 0.045212
+- Epoch 02, Iteration 002101, Loss 0.053460
+- Epoch 03, Iteration 002151, Loss 0.052240
+- Epoch 03, Iteration 002201, Loss 0.054639
+- Epoch 03, Iteration 002251, Loss 0.044879
+- Epoch 03, Iteration 002301, Loss 0.050218
+- Epoch 03, Iteration 002351, Loss 0.052066
+- Epoch 03, Iteration 002401, Loss 0.046724
+- Epoch 03, Iteration 002451, Loss 0.053084
+- Epoch 03, Iteration 002501, Loss 0.035005
+- Epoch 03, Iteration 002551, Loss 0.046562
+- Epoch 03, Iteration 002601, Loss 0.039453
+- Epoch 03, Iteration 002651, Loss 0.052428
+- Epoch 03, Iteration 002701, Loss 0.053799
+- Epoch 03, Iteration 002751, Loss 0.051664
+- Epoch 03, Iteration 002801, Loss 0.042944
+- Epoch 03, Iteration 002851, Loss 0.044126
+- Epoch 03, Iteration 002901, Loss 0.037618
+- Epoch 03, Iteration 002951, Loss 0.035743
+- Epoch 03, Iteration 003001, Loss 0.051584
+- Epoch 03, Iteration 003051, Loss 0.046074
+- Epoch 03, Iteration 003101, Loss 0.044425
+- Epoch 03, Iteration 003151, Loss 0.045157
+- Epoch 03, Iteration 003201, Loss 0.044619
+- Epoch 04, Iteration 003251, Loss 0.037809
+- Epoch 04, Iteration 003301, Loss 0.047303
+- Epoch 04, Iteration 003351, Loss 0.053984
+- Epoch 04, Iteration 003401, Loss 0.039508
+- Epoch 04, Iteration 003451, Loss 0.057779
+- Epoch 04, Iteration 003501, Loss 0.038795
+- Epoch 04, Iteration 003551, Loss 0.041772
+- Epoch 04, Iteration 003601, Loss 0.040335
+- Epoch 04, Iteration 003651, Loss 0.039715
+- Epoch 04, Iteration 003701, Loss 0.038575
+- Epoch 04, Iteration 003751, Loss 0.034517
+- Epoch 04, Iteration 003801, Loss 0.036041
+- Epoch 04, Iteration 003851, Loss 0.040721
+- Epoch 04, Iteration 003901, Loss 0.035957
+- Epoch 04, Iteration 003951, Loss 0.041333
+- Epoch 04, Iteration 004001, Loss 0.035013
+- Epoch 04, Iteration 004051, Loss 0.060446
+- Epoch 04, Iteration 004101, Loss 0.034907
+- Epoch 04, Iteration 004151, Loss 0.034191
+- Epoch 04, Iteration 004201, Loss 0.036703
+- Epoch 04, Iteration 004251, Loss 0.044129
+- Epoch 05, Iteration 004301, Loss 0.042743
+- Epoch 05, Iteration 004351, Loss 0.034260
+- Epoch 05, Iteration 004401, Loss 0.042202
+- Epoch 05, Iteration 004451, Loss 0.032857
+- Epoch 05, Iteration 004501, Loss 0.028763
+- Epoch 05, Iteration 004551, Loss 0.052765
+- Epoch 05, Iteration 004601, Loss 0.037960
+- Epoch 05, Iteration 004651, Loss 0.041059
+- Epoch 05, Iteration 004701, Loss 0.033431
+- Epoch 05, Iteration 004751, Loss 0.035811
+- Epoch 05, Iteration 004801, Loss 0.025173
+- Epoch 05, Iteration 004851, Loss 0.038766
+- Epoch 05, Iteration 004901, Loss 0.024940
+- Epoch 05, Iteration 004951, Loss 0.031447
+- Epoch 05, Iteration 005001, Loss 0.032982
+- Epoch 05, Iteration 005051, Loss 0.031178
+- Epoch 05, Iteration 005101, Loss 0.027878
+- Epoch 05, Iteration 005151, Loss 0.028206
+- Epoch 05, Iteration 005201, Loss 0.034049
+- Epoch 05, Iteration 005251, Loss 0.028000
+- Epoch 05, Iteration 005301, Loss 0.034623
+- Epoch 05, Iteration 005351, Loss 0.025798
+- Epoch 06, Iteration 005401, Loss 0.034076
+- Epoch 06, Iteration 005451, Loss 0.025368
+- Epoch 06, Iteration 005501, Loss 0.034474
+- Epoch 06, Iteration 005551, Loss 0.035323
+- Epoch 06, Iteration 005601, Loss 0.026737
+- Epoch 06, Iteration 005651, Loss 0.031379
+- Epoch 06, Iteration 005701, Loss 0.037689
+- Epoch 06, Iteration 005751, Loss 0.026315
+- Epoch 06, Iteration 005801, Loss 0.021869
+- Epoch 06, Iteration 005851, Loss 0.026049
+- Epoch 06, Iteration 005901, Loss 0.024494
+- Epoch 06, Iteration 005951, Loss 0.025446
+- Epoch 06, Iteration 006001, Loss 0.027356
+- Epoch 06, Iteration 006051, Loss 0.048130
+- Epoch 06, Iteration 006101, Loss 0.030283
+- Epoch 06, Iteration 006151, Loss 0.026972
+- Epoch 06, Iteration 006201, Loss 0.030537
+- Epoch 06, Iteration 006251, Loss 0.017311
+- Epoch 06, Iteration 006301, Loss 0.039503
+- Epoch 06, Iteration 006351, Loss 0.024531
+- Epoch 06, Iteration 006401, Loss 0.042876
+- Epoch 07, Iteration 006451, Loss 0.022329
+- Epoch 07, Iteration 006501, Loss 0.029349
+- Epoch 07, Iteration 006551, Loss 0.031925
+- Epoch 07, Iteration 006601, Loss 0.026340
+# Restart training at 2022-04-05 11:35:45
+
+```python
+batch_size = 6
+max_num_samples = 1000
+num_epochs = 500
+learning_rate = 1.00e-04
+dropout_prob = 0.00000
+weight_decay = 0.00000
+```
+
+- Epoch 01, Iteration 000001, Loss 0.019975
+- Epoch 01, Iteration 000051, Loss 0.018967
+- Epoch 01, Iteration 000101, Loss 0.019833
+- Epoch 01, Iteration 000151, Loss 0.015781
+- Epoch 01, Iteration 000201, Loss 0.018924
+- Epoch 01, Iteration 000251, Loss 0.019115
+- Epoch 01, Iteration 000301, Loss 0.016374
+- Epoch 01, Iteration 000351, Loss 0.017948
+- Epoch 01, Iteration 000401, Loss 0.025034
+- Epoch 01, Iteration 000451, Loss 0.013985
+- Epoch 01, Iteration 000501, Loss 0.015718
+- Epoch 01, Iteration 000551, Loss 0.016843
+- Epoch 01, Iteration 000601, Loss 0.010812
+- Epoch 01, Iteration 000651, Loss 0.012089
+- Epoch 01, Iteration 000701, Loss 0.018922
+- Epoch 01, Iteration 000751, Loss 0.012061
+- Epoch 01, Iteration 000801, Loss 0.019761
+- Epoch 01, Iteration 000851, Loss 0.017268
+- Epoch 01, Iteration 000901, Loss 0.017502
+- Epoch 01, Iteration 000951, Loss 0.018356
+- Epoch 01, Iteration 001001, Loss 0.017830
+- Epoch 01, Iteration 001051, Loss 0.014408
+- Epoch 02, Iteration 001101, Loss 0.014295
+- Epoch 02, Iteration 001151, Loss 0.024212
+- Epoch 02, Iteration 001201, Loss 0.019342
+- Epoch 02, Iteration 001251, Loss 0.018504
+- Epoch 02, Iteration 001301, Loss 0.022575
+- Epoch 02, Iteration 001351, Loss 0.017612
+- Epoch 02, Iteration 001401, Loss 0.022388
+- Epoch 02, Iteration 001451, Loss 0.016291
+- Epoch 02, Iteration 001501, Loss 0.020137
+- Epoch 02, Iteration 001551, Loss 0.025160
+- Epoch 02, Iteration 001601, Loss 0.014746
+- Epoch 02, Iteration 001651, Loss 0.016092
+- Epoch 02, Iteration 001701, Loss 0.016709
+- Epoch 02, Iteration 001751, Loss 0.017710
+- Epoch 02, Iteration 001801, Loss 0.025121
+- Epoch 02, Iteration 001851, Loss 0.019631
+- Epoch 02, Iteration 001901, Loss 0.020802
+- Epoch 02, Iteration 001951, Loss 0.014026
+- Epoch 02, Iteration 002001, Loss 0.009696
+- Epoch 02, Iteration 002051, Loss 0.016374
+- Epoch 02, Iteration 002101, Loss 0.014849
+- Epoch 03, Iteration 002151, Loss 0.014673
+- Epoch 03, Iteration 002201, Loss 0.014797
+- Epoch 03, Iteration 002251, Loss 0.017647
+- Epoch 03, Iteration 002301, Loss 0.016483
+- Epoch 03, Iteration 002351, Loss 0.012611
+- Epoch 03, Iteration 002401, Loss 0.013816
+- Epoch 03, Iteration 002451, Loss 0.012950
+- Epoch 03, Iteration 002501, Loss 0.013023
+- Epoch 03, Iteration 002551, Loss 0.017904
+- Epoch 03, Iteration 002601, Loss 0.014784
+- Epoch 03, Iteration 002651, Loss 0.017861
+- Epoch 03, Iteration 002701, Loss 0.019841
+- Epoch 03, Iteration 002751, Loss 0.013636
+- Epoch 03, Iteration 002801, Loss 0.015199
+- Epoch 03, Iteration 002851, Loss 0.013997
+- Epoch 03, Iteration 002901, Loss 0.020089
+- Epoch 03, Iteration 002951, Loss 0.016166
+- Epoch 03, Iteration 003001, Loss 0.014789
+- Epoch 03, Iteration 003051, Loss 0.020187
+- Epoch 03, Iteration 003101, Loss 0.009230
+- Epoch 03, Iteration 003151, Loss 0.012302
+- Epoch 03, Iteration 003201, Loss 0.010689
+- Epoch 04, Iteration 003251, Loss 0.013939
+- Epoch 04, Iteration 003301, Loss 0.019204
+- Epoch 04, Iteration 003351, Loss 0.011667
+- Epoch 04, Iteration 003401, Loss 0.021561
+- Epoch 04, Iteration 003451, Loss 0.018425
+- Epoch 04, Iteration 003501, Loss 0.012536
+- Epoch 04, Iteration 003551, Loss 0.011073
+- Epoch 04, Iteration 003601, Loss 0.015756
+- Epoch 04, Iteration 003651, Loss 0.022818
+- Epoch 04, Iteration 003701, Loss 0.013061
+- Epoch 04, Iteration 003751, Loss 0.014727
+- Epoch 04, Iteration 003801, Loss 0.013766
+- Epoch 04, Iteration 003851, Loss 0.016766
+- Epoch 04, Iteration 003901, Loss 0.018639
+- Epoch 04, Iteration 003951, Loss 0.016580
+- Epoch 04, Iteration 004001, Loss 0.015811
+- Epoch 04, Iteration 004051, Loss 0.017306
+- Epoch 04, Iteration 004101, Loss 0.012480
+- Epoch 04, Iteration 004151, Loss 0.014157
+- Epoch 04, Iteration 004201, Loss 0.014733
+- Epoch 04, Iteration 004251, Loss 0.013410
+- Epoch 05, Iteration 004301, Loss 0.020588
+- Epoch 05, Iteration 004351, Loss 0.016327
+- Epoch 05, Iteration 004401, Loss 0.011227
+- Epoch 05, Iteration 004451, Loss 0.011941
+- Epoch 05, Iteration 004501, Loss 0.019162
+- Epoch 05, Iteration 004551, Loss 0.018341
+- Epoch 05, Iteration 004601, Loss 0.018555
+- Epoch 05, Iteration 004651, Loss 0.011158
+- Epoch 05, Iteration 004701, Loss 0.013681
+- Epoch 05, Iteration 004751, Loss 0.012165
+- Epoch 05, Iteration 004801, Loss 0.016920
+- Epoch 05, Iteration 004851, Loss 0.008534
+- Epoch 05, Iteration 004901, Loss 0.017441
+- Epoch 05, Iteration 004951, Loss 0.015441
+- Epoch 05, Iteration 005001, Loss 0.017045
+- Epoch 05, Iteration 005051, Loss 0.010384
+- Epoch 05, Iteration 005101, Loss 0.015625
+- Epoch 05, Iteration 005151, Loss 0.010818
+- Epoch 05, Iteration 005201, Loss 0.012309
+- Epoch 05, Iteration 005251, Loss 0.012562
+- Epoch 05, Iteration 005301, Loss 0.007845
+- Epoch 05, Iteration 005351, Loss 0.011299
+- Epoch 06, Iteration 005401, Loss 0.014683
+- Epoch 06, Iteration 005451, Loss 0.011978
+- Epoch 06, Iteration 005501, Loss 0.010742
+- Epoch 06, Iteration 005551, Loss 0.012865
+- Epoch 06, Iteration 005601, Loss 0.015790
+- Epoch 06, Iteration 005651, Loss 0.011657
+- Epoch 06, Iteration 005701, Loss 0.013160
+- Epoch 06, Iteration 005751, Loss 0.010330
+- Epoch 06, Iteration 005801, Loss 0.012849
+- Epoch 06, Iteration 005851, Loss 0.015528
+- Epoch 06, Iteration 005901, Loss 0.013532
+- Epoch 06, Iteration 005951, Loss 0.011231
+- Epoch 06, Iteration 006001, Loss 0.014458
+- Epoch 06, Iteration 006051, Loss 0.015143
+- Epoch 06, Iteration 006101, Loss 0.014467
+- Epoch 06, Iteration 006151, Loss 0.009682
+- Epoch 06, Iteration 006201, Loss 0.016799
+- Epoch 06, Iteration 006251, Loss 0.012554
+- Epoch 06, Iteration 006301, Loss 0.013731
+- Epoch 06, Iteration 006351, Loss 0.019347
+- Epoch 06, Iteration 006401, Loss 0.012483
+- Epoch 07, Iteration 006451, Loss 0.011198
+- Epoch 07, Iteration 006501, Loss 0.011375
+- Epoch 07, Iteration 006551, Loss 0.013679
+- Epoch 07, Iteration 006601, Loss 0.011114
+- Epoch 07, Iteration 006651, Loss 0.012930
+- Epoch 07, Iteration 006701, Loss 0.018596
+- Epoch 07, Iteration 006751, Loss 0.013344
+- Epoch 07, Iteration 006801, Loss 0.012357
+- Epoch 07, Iteration 006851, Loss 0.011602
+- Epoch 07, Iteration 006901, Loss 0.010237
+- Epoch 07, Iteration 006951, Loss 0.016055
+- Epoch 07, Iteration 007001, Loss 0.011085
+- Epoch 07, Iteration 007051, Loss 0.012971
+- Epoch 07, Iteration 007101, Loss 0.015612
+- Epoch 07, Iteration 007151, Loss 0.008989
+- Epoch 07, Iteration 007201, Loss 0.009561
+- Epoch 07, Iteration 007251, Loss 0.011604
+- Epoch 07, Iteration 007301, Loss 0.009167
+- Epoch 07, Iteration 007351, Loss 0.013510
+- Epoch 07, Iteration 007401, Loss 0.014337
+- Epoch 07, Iteration 007451, Loss 0.009347
+- Epoch 07, Iteration 007501, Loss 0.008492
+- Epoch 08, Iteration 007551, Loss 0.013453
+- Epoch 08, Iteration 007601, Loss 0.014396
+- Epoch 08, Iteration 007651, Loss 0.014846
+- Epoch 08, Iteration 007701, Loss 0.011476
+- Epoch 08, Iteration 007751, Loss 0.008308
+- Epoch 08, Iteration 007801, Loss 0.014198
+- Epoch 08, Iteration 007851, Loss 0.014288
+- Epoch 08, Iteration 007901, Loss 0.009014
+- Epoch 08, Iteration 007951, Loss 0.007189
+- Epoch 08, Iteration 008001, Loss 0.008636
+- Epoch 08, Iteration 008051, Loss 0.012139
+- Epoch 08, Iteration 008101, Loss 0.011786
+- Epoch 08, Iteration 008151, Loss 0.015132
+- Epoch 08, Iteration 008201, Loss 0.008775
+- Epoch 08, Iteration 008251, Loss 0.013961
+- Epoch 08, Iteration 008301, Loss 0.011982
+- Epoch 08, Iteration 008351, Loss 0.011685
+- Epoch 08, Iteration 008401, Loss 0.010497
+- Epoch 08, Iteration 008451, Loss 0.011308
+- Epoch 08, Iteration 008501, Loss 0.012499
+- Epoch 08, Iteration 008551, Loss 0.006826
+- Epoch 09, Iteration 008601, Loss 0.011441
+- Epoch 09, Iteration 008651, Loss 0.008586
+- Epoch 09, Iteration 008701, Loss 0.016615
+- Epoch 09, Iteration 008751, Loss 0.013061
+- Epoch 09, Iteration 008801, Loss 0.017518
+- Epoch 09, Iteration 008851, Loss 0.010871
+- Epoch 09, Iteration 008901, Loss 0.011499
+- Epoch 09, Iteration 008951, Loss 0.009100
+- Epoch 09, Iteration 009001, Loss 0.011834
+- Epoch 09, Iteration 009051, Loss 0.009452
+- Epoch 09, Iteration 009101, Loss 0.012671
+- Epoch 09, Iteration 009151, Loss 0.007315
+- Epoch 09, Iteration 009201, Loss 0.010523
+- Epoch 09, Iteration 009251, Loss 0.006653
+- Epoch 09, Iteration 009301, Loss 0.008301
+- Epoch 09, Iteration 009351, Loss 0.010889
+- Epoch 09, Iteration 009401, Loss 0.008522
+- Epoch 09, Iteration 009451, Loss 0.010554
+- Epoch 09, Iteration 009501, Loss 0.011475
+- Epoch 09, Iteration 009551, Loss 0.008016
+- Epoch 09, Iteration 009601, Loss 0.008681
+- Epoch 10, Iteration 009651, Loss 0.012308
+- Epoch 10, Iteration 009701, Loss 0.014750
+- Epoch 10, Iteration 009751, Loss 0.015810
+# Restart training at 2022-04-05 12:29:10
+
+```python
+batch_size = 6
+max_num_samples = 1000
+num_epochs = 500
+learning_rate = 1.00e-05
+dropout_prob = 0.00000
+weight_decay = 0.00000
+```
+
+- Epoch 01, Iteration 000001, Loss 0.010300
+- Epoch 01, Iteration 000051, Loss 0.009514
+- Epoch 01, Iteration 000101, Loss 0.012422
+- Epoch 01, Iteration 000151, Loss 0.009342
+- Epoch 01, Iteration 000201, Loss 0.008093
+- Epoch 01, Iteration 000251, Loss 0.009833
+- Epoch 01, Iteration 000301, Loss 0.012872
+- Epoch 01, Iteration 000351, Loss 0.013179
+- Epoch 01, Iteration 000401, Loss 0.007906
+- Epoch 01, Iteration 000451, Loss 0.009656
+- Epoch 01, Iteration 000501, Loss 0.014665
+- Epoch 01, Iteration 000551, Loss 0.008090
+- Epoch 01, Iteration 000601, Loss 0.011245
+- Epoch 01, Iteration 000651, Loss 0.009549
+- Epoch 01, Iteration 000701, Loss 0.006460
+- Epoch 01, Iteration 000751, Loss 0.005273
+- Epoch 01, Iteration 000801, Loss 0.011926
+- Epoch 01, Iteration 000851, Loss 0.012274
+- Epoch 01, Iteration 000901, Loss 0.012309
+- Epoch 01, Iteration 000951, Loss 0.011460
+- Epoch 01, Iteration 001001, Loss 0.011292
+- Epoch 01, Iteration 001051, Loss 0.014331
+- Epoch 02, Iteration 001101, Loss 0.006684
+- Epoch 02, Iteration 001151, Loss 0.011223
+- Epoch 02, Iteration 001201, Loss 0.005843
+- Epoch 02, Iteration 001251, Loss 0.017885
+- Epoch 02, Iteration 001301, Loss 0.005525
+- Epoch 02, Iteration 001351, Loss 0.008360
+- Epoch 02, Iteration 001401, Loss 0.007706
+- Epoch 02, Iteration 001451, Loss 0.011479
+- Epoch 02, Iteration 001501, Loss 0.007586
+- Epoch 02, Iteration 001551, Loss 0.008162
+- Epoch 02, Iteration 001601, Loss 0.016876
+- Epoch 02, Iteration 001651, Loss 0.012347
+- Epoch 02, Iteration 001701, Loss 0.005975
+- Epoch 02, Iteration 001751, Loss 0.012943
+- Epoch 02, Iteration 001801, Loss 0.013368
+- Epoch 02, Iteration 001851, Loss 0.007765
+- Epoch 02, Iteration 001901, Loss 0.010242
+- Epoch 02, Iteration 001951, Loss 0.009541
+- Epoch 02, Iteration 002001, Loss 0.008238
+- Epoch 02, Iteration 002051, Loss 0.011565
+- Epoch 02, Iteration 002101, Loss 0.008510
+- Epoch 03, Iteration 002151, Loss 0.012643
+- Epoch 03, Iteration 002201, Loss 0.008833
+- Epoch 03, Iteration 002251, Loss 0.012310
+- Epoch 03, Iteration 002301, Loss 0.009777
+- Epoch 03, Iteration 002351, Loss 0.008995
+- Epoch 03, Iteration 002401, Loss 0.011326
+- Epoch 03, Iteration 002451, Loss 0.010179
+- Epoch 03, Iteration 002501, Loss 0.008929
+- Epoch 03, Iteration 002551, Loss 0.011572
+- Epoch 03, Iteration 002601, Loss 0.009288
+- Epoch 03, Iteration 002651, Loss 0.009876
+- Epoch 03, Iteration 002701, Loss 0.011559
+- Epoch 03, Iteration 002751, Loss 0.007807
+- Epoch 03, Iteration 002801, Loss 0.010131
+- Epoch 03, Iteration 002851, Loss 0.007924
+- Epoch 03, Iteration 002901, Loss 0.013936
+- Epoch 03, Iteration 002951, Loss 0.007773
+- Epoch 03, Iteration 003001, Loss 0.005185
+- Epoch 03, Iteration 003051, Loss 0.008041
+- Epoch 03, Iteration 003101, Loss 0.011176
+- Epoch 03, Iteration 003151, Loss 0.007240
+- Epoch 03, Iteration 003201, Loss 0.011638
+- Epoch 04, Iteration 003251, Loss 0.011238
