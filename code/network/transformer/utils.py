@@ -33,7 +33,6 @@ class PositionEncoding(nn.Module):
         self._data_type = data_type
         self._device = device
         # Layer
-        self.dropout = nn.Dropout(p=0.1)
         self._encoding = torch.zeros(max_length, dim_model).to(self._data_type).to(self._device)
         # Do not upgrade during optimization
         self._encoding.requires_grad = False
@@ -56,8 +55,7 @@ class PositionEncoding(nn.Module):
         '''
         output = x + self._encoding[:x.size(1)]
         output.masked_fill_(x==0, 0)
-        # return output
-        return self.dropout(output)
+        return output
 
 # ScaledDotProductAttention
 class ScaledDotProductAttention(nn.Module):
@@ -87,7 +85,7 @@ class ScaledDotProductAttention(nn.Module):
         return context
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, dim_model, dim_k, num_heads, dropout, data_type, device) -> None:
+    def __init__(self, dim_model, dim_k, num_heads, data_type, device) -> None:
         super().__init__()
         # Input
         if dim_model % num_heads != 0:
@@ -96,7 +94,6 @@ class MultiHeadAttention(nn.Module):
         self._dim_k = dim_k
         self._dim_v = self._dim_model // num_heads
         self._num_heads = num_heads
-        self._dropout = dropout
         self._data_type = data_type
         self._device = device
         # Layer
@@ -111,7 +108,6 @@ class MultiHeadAttention(nn.Module):
         ).to(self._data_type).to(self._device)
         self.layer_norm = nn.LayerNorm(self._dim_model).to(self._data_type).to(self._device)
         self.scaled_dot_product_attention = ScaledDotProductAttention(self._data_type, self._device)
-        self.dropout = nn.Dropout(p=self._dropout).to(self._data_type).to(self._device)
 
     def forward(self, input_Q: torch.Tensor, input_K: torch.Tensor, input_V: torch.Tensor):
         '''
@@ -135,9 +131,6 @@ class MultiHeadAttention(nn.Module):
         context = self.scaled_dot_product_attention(Q, K, V)
         # context: [batch_size, len_q, n_heads * dim_v = dim_model]
         context = context.transpose(1, 2).reshape(batch_size, -1, self._num_heads * self._dim_v)
-        # Dropout before add
-        context = context
-        # Dropout after add
         return self.layer_norm(context + residual)
 
 # Position-wise fully connected feed-forward network

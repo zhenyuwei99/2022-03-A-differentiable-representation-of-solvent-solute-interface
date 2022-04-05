@@ -16,20 +16,19 @@ from network.transformer.utils import *
 
 # Encoder Layer
 class EncoderLayer(nn.Module):
-    def __init__(self, dim_model, dim_k, dim_ff, num_heads, dropout, data_type, device) -> None:
+    def __init__(self, dim_model, dim_k, dim_ff, num_heads, data_type, device) -> None:
         super().__init__()
         # Input
         self._dim_model = dim_model
         self._dim_k = dim_k
         self._dim_ff = dim_ff
         self._num_heads = num_heads
-        self._dropout = dropout
         self._data_type = data_type
         self._device = device
         # Layer
         self._encoder_self_attention = MultiHeadAttention(
             self._dim_model, self._dim_k, self._num_heads,
-            self._dropout, self._data_type, self._device
+            self._data_type, self._device
         )
         self._poswise_ffn = PoswiseFeedForwardNet(
             self._dim_model, self._dim_ff, data_type, device
@@ -51,8 +50,7 @@ class Encoder(nn.Module):
     def __init__(
         self, dim_model, dim_k, dim_ffn,
         directory_size, num_layers, num_heads,
-        dropout, max_sequence_length,
-        data_type, device
+        max_sequence_length, data_type, device
     ) -> None:
         super().__init__()
         # Input
@@ -63,7 +61,6 @@ class Encoder(nn.Module):
         self._directory_size = directory_size
         self._num_layers = num_layers
         self._num_heads = num_heads
-        self._dropout = dropout
         self._max_sequence_length = max_sequence_length
         self._data_type = data_type
         self._device = device
@@ -78,8 +75,7 @@ class Encoder(nn.Module):
         self.layers = nn.ModuleList([
             EncoderLayer(
                 self._dim_model, self._dim_k, self._dim_ffn,
-                self._num_heads, self._dropout,
-                self._data_type, self._device
+                self._num_heads, self._data_type, self._device
             ) for _ in range(self._num_layers)
         ])
 
@@ -100,20 +96,19 @@ class Encoder(nn.Module):
 
 # Decoder Layer
 class DecoderLayer(nn.Module):
-    def __init__(self, dim_model, dim_k, dim_ff, num_heads, dropout, data_type, device) -> None:
+    def __init__(self, dim_model, dim_k, dim_ff, num_heads, data_type, device) -> None:
         super().__init__()
         # Input
         self._dim_model = dim_model
         self._dim_k = dim_k
         self._dim_ff = dim_ff
         self._num_heads = num_heads
-        self._dropout = dropout
         self._data_type = data_type
         self._device = device
         # Layer
         self._encoder_self_attention = MultiHeadAttention(
             self._dim_model, self._dim_k, self._num_heads,
-            self._dropout, self._data_type, self._device
+            self._data_type, self._device
         )
         self._poswise_ffn = PoswiseFeedForwardNet(
             self._dim_model, self._dim_ff,
@@ -137,7 +132,7 @@ class Decoder(nn.Module):
     def __init__(
         self, dim_model, dim_k, dim_ffn,
         directory_size, num_layers, num_heads,
-        dropout, data_type, device
+        data_type, device
     ) -> None:
         super().__init__()
         # Input
@@ -147,7 +142,6 @@ class Decoder(nn.Module):
         self._directory_size = directory_size
         self._num_layers = num_layers
         self._num_heads = num_heads
-        self._dropout = dropout
         self._data_type = data_type
         self._device = device
         # Layer
@@ -157,8 +151,7 @@ class Decoder(nn.Module):
         self.layers = nn.ModuleList([
             DecoderLayer(
                 self._dim_model, self._dim_k, self._dim_ffn,
-                self._num_heads, self._dropout,
-                self._data_type, self._device
+                self._num_heads, self._data_type, self._device
             ) for _ in range(self._num_layers)
         ])
 
@@ -179,8 +172,7 @@ class Transformer(nn.Module):
     def __init__(
         self, dim_model, dim_k, dim_ffn,
         directory_size, num_layers, num_heads,
-        dropout, max_sequence_length,
-        data_type, device
+        max_sequence_length, data_type, device
     ) -> None:
         super().__init__()
         # Input
@@ -191,7 +183,6 @@ class Transformer(nn.Module):
         self._directory_size = directory_size
         self._num_layers = num_layers
         self._num_heads = num_heads
-        self._dropout = dropout
         self._max_sequence_length = max_sequence_length
         self._data_type = data_type
         self._device = device
@@ -203,7 +194,6 @@ class Transformer(nn.Module):
             directory_size=self._directory_size,
             num_layers=self._num_layers,
             num_heads=self._num_heads,
-            dropout=self._dropout,
             max_sequence_length=self._max_sequence_length,
             data_type=self._data_type,
             device=self._device
@@ -215,7 +205,6 @@ class Transformer(nn.Module):
             directory_size=self._directory_size,
             num_layers=self._num_layers,
             num_heads=self._num_heads,
-            dropout=self._dropout,
             data_type=self._data_type,
             device=self._device
         )
