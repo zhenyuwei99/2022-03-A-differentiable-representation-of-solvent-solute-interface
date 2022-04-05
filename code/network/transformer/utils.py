@@ -33,7 +33,7 @@ class PositionEncoding(nn.Module):
         self._data_type = data_type
         self._device = device
         # Layer
-        self.dropout = nn.FeatureAlphaDropout(p=0.1)
+        self.dropout = nn.Dropout(p=0.1)
         self._encoding = torch.zeros(max_length, dim_model).to(self._data_type).to(self._device)
         # Do not upgrade during optimization
         self._encoding.requires_grad = False
@@ -57,8 +57,7 @@ class PositionEncoding(nn.Module):
         output = x + self._encoding[:x.size(1)]
         output.masked_fill_(x==0, 0)
         # return output
-        return output
-        # return self.dropout(output)
+        return self.dropout(output)
 
 # ScaledDotProductAttention
 class ScaledDotProductAttention(nn.Module):

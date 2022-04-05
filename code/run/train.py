@@ -52,8 +52,8 @@ if __name__ == '__main__':
     )
     # Train
     criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    # optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.99)
+    # optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.99)
     iteration = 0
     for epoch in range(num_epochs):
         for sequence_coordinate, sequence_label, coordinate, label in loader:
