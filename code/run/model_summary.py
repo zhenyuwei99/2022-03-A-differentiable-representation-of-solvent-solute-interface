@@ -9,9 +9,6 @@ contact : zhenyuwei99@gmail.com
 copyright : (C)Copyright 2021-2021, Zhenyu Wei and Southeast University
 '''
 
-import torch
-import torch.nn as nn
-import torchsummary
 from run import *
 
 def count_parameters(model):
@@ -22,5 +19,6 @@ if __name__ == '__main__':
     with h5py.File(train_dataset_file, 'r') as f:
         max_sequence_length = f['info/max_sequence_length'][()]
     # Initialization
+    model_file = os.path.join(bak_dir, '06-larger-batch-size-less-layer', 'model.pt')
     model = load_model(model_file, max_sequence_length=max_sequence_length)
     print('parameters_count:',count_parameters(model))

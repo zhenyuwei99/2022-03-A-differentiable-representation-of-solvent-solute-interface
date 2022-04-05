@@ -35,8 +35,10 @@ def generate_tcl_text(key):
 
 if __name__ == '__main__':
     # Dir
+    model_file = os.path.join(bak_dir, '06-larger-batch-size-less-layer', 'model.pt')
     out_dir = os.path.join(cur_dir, './out/image')
-    pdb_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset/test'
+    pdb_dir = '/home/zhenyuwei/solvated-protein-data-set/solvated-protein-data-set/modified_data/test'
+    # pdb_dir = '/home/zhenyuwei/hdd_data/solvated_protein_dataset/test'
     # Read data
     with h5py.File(test_dataset_file, 'r') as f:
             max_sequence_length = f['info/max_sequence_length'][()]
@@ -58,7 +60,7 @@ if __name__ == '__main__':
 
         num_samples = coordinate.size()[0]
         result = np.zeros([num_samples])
-        num_samples_per_epoch = 10000
+        num_samples_per_epoch = 50000
         num_epochs = num_samples // num_samples_per_epoch
 
         with torch.no_grad():
