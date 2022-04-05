@@ -41,7 +41,7 @@ class Collect:
         label: [batch_size, num_samples, 3]
         '''
         num_samples = self._max_num_samples
-        num_samples = np.random.randint(10, self._max_num_samples, 1)
+        # num_samples = np.random.randint(10, self._max_num_samples, 1)
         max_sequence_length = 0
         sequence, coordinate_label = [], []
         for i, _ in batch_data:

@@ -26,7 +26,7 @@ is_training_restart = not True
 batch_size = 2
 max_num_samples = 1000
 num_epochs = 500
-learning_rate = 5e-6
+learning_rate = 1e-4
 dropout_prob = 0
 weight_decay = 0
 save_interval = 500
@@ -51,9 +51,9 @@ training_info =  '''
 batch_size = %d
 max_num_samples = %d
 num_epochs = %d
-learning_rate = %1e
-dropout_prob = %.2f
-weight_decay = %.2f
+learning_rate = %.2e
+dropout_prob = %.5f
+weight_decay = %.5f
 ```
 ''' %(
     batch_size, max_num_samples, num_epochs,

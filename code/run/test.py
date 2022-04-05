@@ -19,7 +19,7 @@ if __name__ == '__main__':
     model_file = os.path.join(out_dir, 'model.pt')
     # Hyperparameter
     num_test_proteins = 50
-    num_test_samples = 20
+    num_test_samples = 200
     # Read data
     with h5py.File(test_dataset_file, 'r') as f:
         max_sequence_length = f['info/max_sequence_length'][()]
@@ -43,5 +43,5 @@ if __name__ == '__main__':
             if batch_size == 1:
                 output = output.unsqueeze(0)
             num_total_samples += output.numel()
-            num_correct_samples += torch.count_nonzero((output - label)**2 <= 0.25)
+            num_correct_samples += torch.count_nonzero(torch.abs(output - label) <= 0.50)
             print('Total Samples: %d, Accuracy: %.2f %%' %(num_total_samples, num_correct_samples/num_total_samples*100))
